@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Numpad</class>
+ <widget class="QWidget" name="Numpad">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>425</width>
+    <height>296</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Клавиатура</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QPushButton, #edValue {
+	font: 12pt &quot;Segoe UI&quot;;
+	font-weight: bold;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>5</number>
+   </property>
+   <property name="sizeConstraint">
+    <enum>QLayout::SetMaximumSize</enum>
+   </property>
+   <property name="margin">
+    <number>5</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="keyholder">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <layout class="QGridLayout" name="gridLayout" rowstretch="1,1,1,1,1" columnstretch="1,1,1,1,1">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="btn_0">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">0</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">0</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="btn_4">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">4</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">4</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">4</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="btn_1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">1</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="btn_5">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">5</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">5</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">5</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3" rowspan="2" colspan="2">
+       <widget class="QPushButton" name="btn_enter">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">Ok</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>2</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">ok</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="btn_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">2</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">2</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="btn_period">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">.</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>2</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">period</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="btn_3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">3</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">3</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">3</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="btn_escape">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true">1¿escape¿¿</string>
+        </property>
+        <property name="text">
+         <string notr="true">Esc</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>2</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">escape</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QPushButton" name="btn_clear">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">CLR</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>2</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">clear</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="btn_6">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">6</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">6</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">6</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="btn_8">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">8</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">8</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">8</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="btn_10">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">+/-</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>2</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">pm</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="btn_7">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">7</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">7</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">7</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3" colspan="2">
+       <widget class="QPushButton" name="btn_backspace">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">&lt;--</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>2</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">backspace</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="btn_9">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="statusTip">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string notr="true">9</string>
+        </property>
+        <property name="btnMode" stdset="0">
+         <number>1</number>
+        </property>
+        <property name="btnNormal" stdset="0">
+         <string notr="true">9</string>
+        </property>
+        <property name="btnShift" stdset="0">
+         <string notr="true">9</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="5">
+       <widget class="KeyboardLineEdit" name="edValue">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <italic>false</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KeyboardLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>customedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

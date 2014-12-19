@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="UI">
+    <file>images/updateInProgress.png</file>
+    <file>images/error.png</file>
+    <file>images/gps.png</file>
+    <file>images/ok.png</file>
+    <file>images/connection-ok.png</file>
+    <file>images/connection-bad.png</file>
+    <file>segoeuib.ttf</file>
+    <file>segoeui.ttf</file>
+  </qresource>
+</RCC>

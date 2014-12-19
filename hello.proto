@@ -1,0 +1,213 @@
+option optimize_for = LITE_RUNTIME;
+
+option java_package = "ru.indigosystem.taxi.pb";
+
+option java_outer_classname = "HelloPB";
+
+message hello
+{
+	// позывной
+	optional int32 drivername   = 1 [ default = 0 ];
+  
+  // сюда попадёт список остановок с позывными для выбора
+	optional string text_string = 2 [ default = "" ];
+
+	enum TaxiEvent {
+		NOTHING 		=	0;
+    ARRIVED	=	1	;	//	Вышел на линию
+    DAY_END	=	2	;	//	Смена закончена
+    GO_DINNER	=	3	;	//	Ушел на обед
+    BACK_DINNER	=	4	;	//	Вернулся с обеда
+    MOVE_OUT	=	5	;	//	Отлучился
+    BACK_MOVE_OUT	=	6	;	//	Вернулся
+    GO_FROM_CAR	=	7	;	//	Вышел из машины
+    BACK_TO_CAR	=	8	;	//	Вернулся в машину
+    GET_DAMAGE	=	9	;	//	Поломка
+    REPEAR_DAMAGE	=	10	;	//	Отремонтировался
+    TECHHELP	=	11	;	//	Поехал на тех помощь
+    BACK_TECHHELP	=	12	;	//	Вернулся с тех помощи
+    IN_PLACE	=	13	;	//	На месте. Приглашай
+    MOVE_TO_CLIENT	=	14	;	//	Поехал за клиентом
+    START_CLIENT_MOVE	=	15	;	//	Поехал с клиентом
+    HELP	=	16	;	//	Помощь
+    NOT_TO_ME	=	17	;	//	Отказ от заказа (водителем)
+    END_CLIENT_MOVE = 18;	//	Поездку завершили
+    MOVED	=	19	;	// Смена целевого района заказа либо положения водителя	
+    NOT_PAY	=	20	;	// Не заплатили	
+    NOT_EXIT	=	21	;	// Не вышли	
+    EMPTY_TRIP	=	22	;	// Пустая поездка	
+    CLIENT_IN_PLACE	=	23	;	// ЗАКАЗ С МЕСТА
+    GET_INFO = 24; // сервер, пришли данные, пожалуйста
+    ASK_REGION = 25; // информация о позывных по региону ASK_REGION;ID_района
+    CHANGE_REGION = 26;	 // хочу стать в такой район на такую стоянку; CHANGE_REGION;ID_района;ID_стоянки
+    ABORT_ORDER = 27; // отмена заказа
+    NOT_ANSWER = 28; // водитель затупил и не принял заказ
+    PERSONAL = 29; // свой клиент (персоналка)
+    PERSONAL_ANSWER = 30;
+    TEXT_MESSAGE = 31; // текстовое сообщение, что в одну, что в другую сторону
+    GET_TAXI_COUNT = 32; // количество такси по районам города
+    ASK_REGION_2 = 33; // альтернативный способ спросить район
+    GET_DRIVER_ORDER = 34; // порядковый номер по району
+    CHANGE_DIRECT = 35; // смена района назначения в процессе поездки (в рамках починки бага)
+    YES = 36; // я возьму заказ (от навигатора)
+    NO = 37; // я не возьму заказ (от навигатора)
+    ORDER_OFFER = 38; // предлагаю заказ на такой-то адрес (от диспетчера)
+    MAY_GO_DINNER = 39; // с девайса -- можно ли на обед?
+    YES_GO_DINNER = 40; // да, иди
+    NO_GO_DINNER = 41; // нет, оставайся  
+	}
+
+	optional TaxiEvent event = 3     [default = NOTHING];
+	optional float latitude = 4;
+	optional float longitude = 5;
+	optional int32 speed_kmh = 6     [default = 0];
+	optional int32 taxiid = 7        [default = 0]; 
+  // от сервера к устройству список тарифов
+  optional TaxiRateAll taxiRate = 8;
+  // от сервера к устройству список районов
+  optional TaxiRegionList taxiRegionList = 9;
+  optional TaxiOrder taxiOrder = 10;
+  optional TaxiInfo taxiInfo = 11;
+  optional TaxiRegionInfo taxiRegionInfo = 12;
+  optional TaxiMessageTemplates taxiMessageTemplates = 13;
+  optional TaxiCount taxiCount = 14;
+  optional DriverInfo driverInfo = 15;
+}
+
+message DriverInfo {
+  optional int32 region_order = 1 [ default = 0 ];
+}
+
+message TaxiCount {
+  repeated TaxiCountRegion regions = 1;
+}
+
+message TaxiCountRegion {
+  optional string region_name = 1 [ default = ""];
+  
+  optional int32 region_id = 2 [ default = 0 ];
+  
+  optional int32 taxi_count = 3 [ default = 0 ];
+}
+
+message TaxiRegionInfo {
+  optional int32 region_id = 1 [ default = 0 ];
+  
+// от сервера -- По району/0/5,2,3,36,13*;РП/59/13*,36;МАГНИТ/61/3;
+  optional string region_data = 2 [ default = "" ];
+  
+  optional int32 stop_id = 3 [ default = 0 ];
+}
+
+message TaxiInfo {
+  // не межгород ли
+  optional bool out_of_city = 1 [ default = false ];
+  
+  // если в городе, то название (для отладки)
+  optional string city_name = 2 [ default = "" ];
+  
+  optional bool inside_parking = 3 [ default = false ];
+  
+  optional float parking_price = 4 [ default = 0.0 ];
+  
+  optional bool parking_is_commercial = 5 [ default = false ];
+  
+  optional int32 parking_id = 6 [ default = 0 ];
+}
+
+message TaxiOrder {
+  enum OrderStatus {
+    NOTHING = 0;
+    BEGIN = 1;
+    END = 2;
+    ABORT = 3;
+  }
+  // стоит требование:
+  //  END_CLIENT_MOVE;SUMMA;SUMMA_GOROD;SUMMA_MG;TIME_TRIP;KM_GOROD;KM_TUDA;KM_OBRATNO;TIME_BAGAGE;TIME_CLIENT;TIME_DRIVER
+
+  // сумма расчёта по поездке
+  optional float money = 1                  [ default = 0 ];
+  // 
+  optional int32 order_id = 2               [ default = 0 ];  
+  // пройденное по городу расстояние
+  optional float distance_travelled = 3     [ default = 0.0 ];  
+  // общее время поездки
+  optional int32 seconds_travelled = 4      [ default = 0 ];  
+  // куда
+  optional int32 destination_region_id = 5 [ default = 0 ];  
+  optional string address = 6 [ default = "" ];    
+  optional OrderStatus status = 7 [ default = NOTHING ];  
+  // времени с багажом
+  optional int32 seconds_baggage = 8 [ default = 0 ];  
+  // пройденное по межгороду расстояние
+  optional float distance_mg_travelled = 9 [ default = 0.0 ];  
+  // id стоянки, из которой выехали
+  optional int32 parking_id = 10 [ default = 0 ];  
+  optional float km_tuda = 11 [ default = 0.0 ];  
+  optional float km_obratno = 12 [ default = 0.0 ];  
+  optional int32 client_stops_seconds = 13 [ default = 0 ];  
+  optional int32 driver_stops_seconds = 14 [ default = 0 ];
+  // cумма по городу 
+  optional int32 money_city = 15 [ default = 0];  
+  // сумма по межгороду
+  optional int32 money_mg = 16 [ default = 0];
+  
+  optional float distance_overload_travelled = 17 [ default = 0.0 ];
+  optional float distance_mg_overload_travelled = 18 [ default = 0.0 ];
+  
+  // потом сюда пойдёт перегруз, всякие стоянки и т.д.
+  
+  // при поездке по талону мы тариф нужный прицепляем прямо к заказу
+  optional bool is_talon = 19 [ default = false ];
+  optional TaxiRatePeriod talon_rate = 20;
+}
+
+// MIN=60/TAL_IN=37/TAL_MIN=6.2/BONUS=5/MG=17;
+// DATE_BEG=7:00:00/DATE_END=22:00:00/CAR_IN=42/CAR_MIN=7.5/KM_G=11.1;
+// DATE_BEG=22:00:00/DATE_END=23:59:00/CAR_IN=42/CAR_MIN=8/KM_G=13.3;
+// DATE_BEG=0:00:01/DATE_END=7:00:00/CAR_IN=42/CAR_MIN=8/KM_G=12.2;
+// тариф
+message TaxiRateAll {
+  repeated TaxiRatePeriod rates = 1;
+  
+  // межгород
+  optional float mg = 2 [ default = 0.0 ];
+  
+  optional float bonus = 3 [ default = 0.0 ];
+  
+  optional float client_stop = 4 [ default = 0.0 ];
+  
+}
+
+message TaxiMessageTemplates {
+  repeated string templates = 1;
+}
+
+
+message TaxiRatePeriod {
+  optional int32 begin_hour = 1   [ default = 0 ];
+  optional int32 begin_minute = 2 [ default = 0 ];
+  optional int32 end_hour = 3     [ default = 0 ];
+  optional int32 end_minute = 4   [ default = 0 ];
+  
+  optional string period_name = 5 [ default = "" ];
+  
+  // подача машины
+  optional float car_in = 6       [ default = 0.0 ];
+  // стоимость километра
+  optional float km_g = 7         [ default = 0.0 ];
+  // стоимость минуты
+  optional float car_min = 8      [ default = 0.0 ];
+  
+  // остановка по просьбе клиента
+  optional float client_stop = 9 [ default = 0.0 ];
+} 
+
+message TaxiRegionList {
+  repeated TaxiRegion regions = 1;
+}
+
+message TaxiRegion {
+  optional string region_name = 1 [ default = "" ];
+  optional int32 region_id = 2    [ default = 0 ];
+}

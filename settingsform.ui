@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingsForm</class>
+ <widget class="QWidget" name="SettingsForm">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>737</width>
+    <height>464</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>SettingsForm</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
+  </property>
+  <widget class="QPushButton" name="exitButton">
+   <property name="geometry">
+    <rect>
+     <x>135</x>
+     <y>320</y>
+     <width>91</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Вернуться</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="dinnerStop">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>130</y>
+     <width>106</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Вернулся 
+с обеда</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="dutyStop">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>70</y>
+     <width>106</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Конец смены</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>exitButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsForm</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>135</x>
+     <y>320</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>108</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dutyStop</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsForm</receiver>
+   <slot>dutyStop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>22</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>166</x>
+     <y>141</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dinnerStop</sender>
+   <signal>clicked()</signal>
+   <receiver>SettingsForm</receiver>
+   <slot>dinnerStop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>33</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>207</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>newDriverName(QString)</slot>
+  <slot>dutyStart()</slot>
+  <slot>dutyStop()</slot>
+  <slot>dinnerStart()</slot>
+  <slot>dinnerStop()</slot>
+ </slots>
+</ui>
