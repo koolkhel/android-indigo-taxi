@@ -1,1 +1,6 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/Sound/Android">
+        <file alias="ringin">Resources/ringin.wav</file>
+        <file alias="click">Resources/click.wav</file>
+    </qresource>
+</RCC>

@@ -136,6 +136,11 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 
 	setProperty("_q_customDpiX", QVariant(_dpi));
 	setProperty("_q_customDpiY", QVariant(_dpi));
+
+    infoDialog->setProperty("_q_customDpiX", QVariant(_dpi));
+    infoDialog->setProperty("_q_customDpiY", QVariant(_dpi));
+    infoDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
+    infoDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
 	
 	confirmDialog->setProperty("_q_customDpiX", QVariant(_dpi));
 	confirmDialog->setProperty("_q_customDpiY", QVariant(_dpi));
@@ -857,7 +862,7 @@ void IndigoTaxi::rebootApp()
 	QString workingDir = QDir::currentPath();
 	bool result = QProcess::startDetached(filePath, args, workingDir);
 
-	QApplication::exit(0);
+    QApplication::exit(0);
 }
 
 // расчёт
@@ -954,11 +959,7 @@ void IndigoTaxi::clearMessageClick()
 void IndigoTaxi::exitButtonClick()
 {
 	if (confirmDialog->ask("ВЫ ПОДТВЕРЖДАЕТЕ ВЫХОД ИЗ ПРОГРАММЫ? ЗАВЕРШАЕТЕ ЛИ ВЫ СМЕНУ?")) {
-		if (driverNumberDialog->showPassword()) {
-			qApp->quit();	
-		} else {
-			infoDialog->info("ОШИБКА: НЕВЕРНЫЙ ПАРОЛЬ");
-		}
+        qApp->quit();
 	}
 }
 

@@ -421,7 +421,7 @@ background:#1d1d1d;
        </font>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="standByPage1">
        <property name="sizePolicy">
@@ -1658,7 +1658,7 @@ background:#1d1d1d;
            <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <property name="elideMode">
            <enum>Qt::ElideNone</enum>
@@ -2513,7 +2513,7 @@ QPushButton[pressed=true] {
                <number>0</number>
               </property>
               <widget class="QWidget" name="systemSettingsPage1">
-               <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,1,1" columnstretch="1,2,2">
+               <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,1,0" columnstretch="1,2,2">
                 <property name="leftMargin">
                  <number>5</number>
                 </property>
@@ -2592,22 +2592,7 @@ QPushButton[pressed=true] {
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
-                 <widget class="QPushButton" name="pushButton_12">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Сменить яркость
-экрана
-(день/ночь)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0" rowspan="3">
+                <item row="0" column="0" rowspan="2">
                  <widget class="QPushButton" name="pushButton_2">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -3165,7 +3150,6 @@ QPushButton[pressed=true] {
   <tabstop>pushButton_6</tabstop>
   <tabstop>pushButton_8</tabstop>
   <tabstop>pushButton_15</tabstop>
-  <tabstop>pushButton_2</tabstop>
   <tabstop>rebootButton</tabstop>
   <tabstop>taxiRateShowButton</tabstop>
   <tabstop>softInfoButton</tabstop>
@@ -4673,22 +4657,6 @@ QPushButton[pressed=true] {
     <hint type="destinationlabel">
      <x>398</x>
      <y>243</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_12</sender>
-   <signal>clicked()</signal>
-   <receiver>IndigoTaxiClass</receiver>
-   <slot>changeBackLightClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>393</x>
-     <y>398</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>411</x>
-     <y>554</y>
     </hint>
    </hints>
   </connection>
