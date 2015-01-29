@@ -21,42 +21,67 @@ taxiId(4)
 	connect(socket, SIGNAL(connected()), SLOT(flushOrderEvents()));
 	connect(socket, SIGNAL(disconnected()), SLOT(disconnected()));
 
-	positionSource = new QNmeaPositionInfoSource(QNmeaPositionInfoSource::RealTimeMode, this);
-	connect(positionSource, SIGNAL(positionUpdated(const QGeoPositionInfo &)), SLOT(positionUpdated(const QGeoPositionInfo &)));
+    //positionSource = new QNmeaPositionInfoSource(QNmeaPositionInfoSource::RealTimeMode, this);
+    qDebug() << "QGeoPositionInfoSource";
+    QStringList sources = QGeoPositionInfoSource::availableSources();
+    foreach (QString source, sources) {
+        qDebug() << "gps source: " << source;
+    }
 
-// FIXME port number aquire
+    qDebug() << "QGeoSatelliteInfoSource";
+    QStringList satSources = QGeoSatelliteInfoSource::availableSources();
+    foreach (QString source, satSources) {
+        qDebug() << "satellite source: " << source;
+    }
+    QGeoSatelliteInfoSource *satSource  = QGeoSatelliteInfoSource::createDefaultSource(this);
+    if (satSource) {
+        connect(satSource, SIGNAL(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)), SLOT(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)));
+    }
+
+    positionSource = QGeoPositionInfoSource::createDefaultSource(this);
+    if (positionSource) {
+        connect(positionSource, SIGNAL(positionUpdated(const QGeoPositionInfo &)), SLOT(positionUpdated(const QGeoPositionInfo &)));
+        //connect(positionSource, SIGNAL(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)), SLOT(satellitesInUseUpdated(const QList<QGeoSatelliteInfo> &)));
+
+        // FIXME port number aquire
 #ifdef UNDER_CE
-	//QString registryKey = "HKEY_LOCAL_MACHINE\\Drivers\\BuiltIn\\GPS";
-	QString registryKey = "HKEY_LOCAL_MACHINE\\init";
-	QSettings registry(registryKey, QSettings::NativeFormat);
-	registry.setValue("Launch110", "\\ResidentFlash\\IndigoTaxi\\IndigoTaxi.exe");
-	QString portIndex = registry.value("index").toString();
-	QString portPrefix = registry.value("Prefix").toString();	
-	QString portName = portPrefix + portIndex;
-	// COM5 COM2
-	portName = "COM1";
+        //QString registryKey = "HKEY_LOCAL_MACHINE\\Drivers\\BuiltIn\\GPS";
+        QString registryKey = "HKEY_LOCAL_MACHINE\\init";
+        QSettings registry(registryKey, QSettings::NativeFormat);
+        registry.setValue("Launch110", "\\ResidentFlash\\IndigoTaxi\\IndigoTaxi.exe");
+        QString portName = "COM1";
 #else
-	QString portName = "COM7";
+        QString portName = "COM7";
 #endif
 
 #ifndef UNDER_ANDROID
-	gpsSerialPort = new QSerialPort(this);
-	// qint32 baudRate = QSerialPort::Baud38400;
-	qint32 baudRate = QSerialPort::Baud38400;
-	
-	gpsSerialPort->setPortName(portName);
-	gpsSerialPort->setBaudRate(baudRate, QSerialPort::Input);
-	gpsSerialPort->setBaudRate(baudRate, QSerialPort::Output);
+        QSerialPort *port = new QSerialPort(this);
 
-	if (!gpsSerialPort->open(QIODevice::ReadWrite)) {
-		qDebug() << QObject::tr("Failed to open port %1, error: %2").arg(portName).arg(gpsSerialPort->errorString()) << endl;
-		
-	} else {
-		positionSource->setDevice(gpsSerialPort);
-		positionSource->startUpdates();
+        // qint32 baudRate = QSerialPort::Baud38400;
+        qint32 baudRate = QSerialPort::Baud38400;
 
-	}
+        port->setPortName(portName);
+        port->setBaudRate(baudRate, QSerialPort::Input);
+        port->setBaudRate(baudRate, QSerialPort::Output);
+
+        gpsSerialPort = port;
+
+        if (!gpsSerialPort->open(QIODevice::ReadWrite)) {
+            qDebug() << QObject::tr("Failed to open port %1, error: %2").arg(portName).arg(gpsSerialPort->errorString()) << endl;
+
+        } else {
+            //positionSource->setDevice(gpsSerialPort);
+            positionSource->startUpdates();
+
+        }
+#else
+        positionSource->setPreferredPositioningMethods(QGeoPositionInfoSource::SatellitePositioningMethods);
+        positionSource->setUpdateInterval(5000);
+        positionSource->startUpdates();
 #endif
+    } else {
+        qDebug() << "no GPS available!";
+    }
 
 	gpsTimer = new QTimer(this);
 	gpsTimer->setSingleShot(false);
@@ -380,16 +405,16 @@ void Backend::consumeSocketData()
 	}
 }
 
+void Backend::satellitesInUseUpdated(const QList<QGeoSatelliteInfo> & satellites)
+{
+    qDebug() << "satellites used:" << satellites.count();
+
+    emit newSatellitesUsed(satellites.count());
+}
+
 void Backend::positionUpdated(const QGeoPositionInfo &update) 
 {
 	// надо будет фильтровать данные, чтобы скорость сохранялась. В разных сообщениях её может не быть, так что -- это проблема, что ли?
-	
-	if (update.hasAttribute(QGeoPositionInfo::SatellitesUsed)) {
-		qDebug() << "satellites used:" << update.attribute(QGeoPositionInfo::SatellitesUsed);
-
-		emit newSatellitesUsed((int) update.attribute(QGeoPositionInfo::SatellitesUsed));
-	}
-
 	if (update.isValid()) {
 		qDebug() << "longitude" << update.coordinate().longitude() << "latitude" << update.coordinate().latitude();
 		positionMessage.set_longitude(update.coordinate().longitude());

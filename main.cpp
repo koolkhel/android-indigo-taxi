@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
 {	
 	int retcode = 0;
 	bool result = 
-#ifdef UNDER_CE	
+#ifdef UNDER_CE
 	QResource::registerResource("\\ResidentFlash\\IndigoTaxi\\sound.rcc");	
-	QResource::registerResource("\\ResidentFlash\\IndigoTaxi\\UI.rcc");	
+    QResource::registerResource("\\ResidentFlash\\IndigoTaxi\\UI.rcc");
 #else
 	QResource::registerResource("C:\\sound.rcc");
 	QResource::registerResource("C:\\UI.rcc");
@@ -79,9 +79,10 @@ int main(int argc, char *argv[])
 	qDebug() << "font status:" << QResource(":/IndigoTaxi/segoeui.ttf").isValid();
 	qDebug() << "font bold status:" << QResource(":/IndigoTaxi/segoeuib.ttf").isValid();
 	
-		
-    qInstallMessageHandler(myMessageOutput);
-	
+//#ifndef UNDER_ANDROID
+//    qInstallMessageHandler(myMessageOutput);
+//#endif
+
 	QApplication a(argc, argv);
 	a.connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
 	QStringList argList = qApp->arguments();
@@ -114,6 +115,7 @@ Debug: "WindowsMobile"
 #else
 		QApplication::setStyle("Windows");
 #endif
+        qApp->setAutoSipEnabled(true);
 	
 		IndigoTaxi w;
 		mainWindow = &w;

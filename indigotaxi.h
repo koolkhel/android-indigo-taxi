@@ -41,6 +41,8 @@ public:
 	~IndigoTaxi();
 	static int const EXIT_CODE_REBOOT;
 	void log(QString message) { ui.serverMessage->setPlainText(message); }
+protected:
+    void resizeEvent(QResizeEvent *event);
 
 signals:
 	void reboot_application();

@@ -12,7 +12,11 @@
 #include "hello.pb.h"
 #include "indigoqueue.h"
 
-#include "qnmeapositioninfosource.h"
+#include <QGeoPositionInfo>
+#include <QGeoPositionInfoSource>
+#include <QGeoSatelliteInfoSource>
+
+//#include "qnmeapositioninfosource.h"
 
 #include <QObject>
 
@@ -47,6 +51,7 @@ signals:
 public slots:
 	// from gps
 	void positionUpdated(const QGeoPositionInfo &update);
+    void satellitesInUseUpdated(const QList<QGeoSatelliteInfo> & satelliteInfo);
 
 	void sendMessageQueued(hello var);
 	void sendEvent(hello_TaxiEvent event);
@@ -92,7 +97,7 @@ private:
 	int taxiId;
 
 	QTimer *gpsTimer;
-	QNmeaPositionInfoSource *positionSource;
+    QGeoPositionInfoSource *positionSource;
 	hello positionMessage;
 
     QIODevice *gpsSerialPort;

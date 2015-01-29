@@ -14,8 +14,10 @@
 #include "backend.h"
 #include "voicelady.h"
 
+#define DEBUG
+
 /* main version string! */
-static const char *version = "0.1.028";
+static const char *version = "0.1.029";
 int const IndigoTaxi::EXIT_CODE_REBOOT = -123456789;
 
 IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
@@ -99,26 +101,34 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 
 	voiceLady = new VoiceLady(this);
 	iSoundPlayer = new ISoundPlayer();
-	soundThread = new QThread(this);
-	soundThread->start();
+    soundThread = new QThread();
 
 	iSoundPlayer->moveToThread(soundThread);
+    soundThread->start();
 
-	connect(voiceLady, SIGNAL(playSound(QString)), iSoundPlayer, SLOT(playResourceSound(QString)));
-	connect(voiceLady, SIGNAL(playSoundFile(QString)), iSoundPlayer, SLOT(playFileSystemSound(QString)));
+    connect(voiceLady, SIGNAL(playSound(QString)), iSoundPlayer,
+            SLOT(playResourceSound(QString)));
+    connect(voiceLady, SIGNAL(playSoundFile(QString)), iSoundPlayer,
+            SLOT(playFileSystemSound(QString)));
 
 	//ui.driverNameLineEdit->setProperty("keyboard",true); // enable the keyboard. when there is no validator set the keyboard will show
 	//aTextLineEdit->setProperty("maxLength",25); //this can be used to limit the length of the string
 	//int dpi = 122;
     _dpi = 170;
-	QRect rect = QApplication::desktop()->geometry();
-	_width = rect.width();
-	_height = rect.height();
+    QScreen *screen = QApplication::screens().at(0);
+    _width = screen->size().width();
+    _height = screen->size().height();
+    qDebug() << "screen width " << _width << " height " << _height;
 
 #ifdef UNDER_CE
 	
-	_dpi = (int) sqrt(_width*_width + _height*_height) / 4.5; // average screen size
+    _dpi = (int) sqrt(_width*_width + _height*_height) / 7; // average screen size
 	qDebug() << "calculated DPI:" << _dpi;
+#endif
+
+#ifdef UNDER_ANDROID
+    _dpi = (int) sqrt(_width*_width + _height*_height) / 7; // average screen size
+    qDebug() << "calculated DPI:" << _dpi;
 #endif
 	orderReceiveTimer = new QTimer(this);
 	orderReceiveTimer->setSingleShot(false);
@@ -154,11 +164,9 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 	ui.settingsTabWidget->setProperty("_q_customDpiX", QVariant(_dpi));
 	ui.settingsTabWidget->setProperty("_q_customDpiY", QVariant(_dpi));
 
-	int tab_width = _width / ui.settingsTabWidget->count() - 3;
-	//int tab_width = 197;
-	int tab_height = (int) _height * 0.15;
-	//de	int tab_height = 120;
-	ui.settingsTabWidget->setStyleSheet(QString("QTabBar::tab { width: %1px; height: %2px;}").arg(tab_width).arg(tab_height));
+    //int tab_width = _width / ui.settingsTabWidget->count() - 3;
+    //int tab_height = (int) _height * 0.15;
+    //ui.settingsTabWidget->setStyleSheet(QString("QTabBar::tab { width: %1px; height: %2px;}").arg(tab_width).arg(tab_height));
 
 	setCurrentScreenFromSettings();
 
@@ -181,6 +189,20 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 	ui.stackedWidget->setCurrentWidget(ui.settingsPage4);
 	ui.settingsTabWidget->setCurrentWidget(ui.driverCabinetSettingsTab2);
 	ui.driverCabinetSettingsStackWidget->setCurrentWidget(ui.driverCabinetPage1);
+}
+
+void IndigoTaxi::resizeEvent(QResizeEvent *event)
+{
+    QScreen *screen = QApplication::screens().at(0);
+    _width = screen->size().width();
+    _height = screen->size().height();
+
+    int tab_width = _width / ui.settingsTabWidget->count() - 3;
+    int tab_height = (int) _height * 0.15;
+
+    qDebug() << "resizing to width " << tab_width << " height " << tab_height;
+
+    ui.settingsTabWidget->setStyleSheet(QString("QTabBar::tab { width: %1px; height: %2px;}").arg(tab_width).arg(tab_height));
 }
 		
 IndigoTaxi::~IndigoTaxi()
@@ -271,7 +293,7 @@ void IndigoTaxi::setCurrentScreenFromSettings()
 
 void IndigoTaxi::driverOrderUpdatedSlot(int driverNumber)
 {
-	voiceLady->click();
+    voiceLady->click();
 	_driverOrder = driverNumber;
 
 	if (driverNumber == 0) {
@@ -291,7 +313,9 @@ void IndigoTaxi::updateTime()
 	QDateTime dateTime = QDateTime::currentDateTimeUtc();	
 	QTime time = dateTime.addSecs(3 * 3600).time(); // MSK+3
 	QString text = time.toString("hh:mm");
+#ifndef UNDER_ANDROID
     ui.timeLabel->setText(text);
+#endif
 
 	// если сразу не получили (не было интернета), но очень хочется
 	if (!_taxiRateReceived && (time.second() == 30 || time.second() == 0)) {
@@ -498,9 +522,7 @@ void IndigoTaxi::handleOrderOffer(hello var) {
 	if (!_orderOfferGuard) {
 		_orderOfferGuard = true;
 		voiceLady->sayPhrase("MESSAGERECEIVED");
-		voiceLady->click();
-		voiceLady->click();
-		voiceLady->click();
+        voiceLady->alarm();
 	
 		if (confirmDialog->askYesNo("Адрес " + address + ". Заберешь по освобождению?")) {
 			answer.set_event(hello_TaxiEvent_YES);
