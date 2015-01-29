@@ -70,7 +70,7 @@
       <enum>Qt::ClickFocus</enum>
      </property>
      <property name="inputMask">
-      <string>000; </string>
+      <string>000</string>
      </property>
      <property name="keyboard" stdset="0">
       <bool>true</bool>
@@ -118,7 +118,7 @@
       <enum>Qt::ClickFocus</enum>
      </property>
      <property name="inputMask">
-      <string>000000; </string>
+      <string>000000</string>
      </property>
      <property name="keyboard" stdset="0">
       <bool>true</bool>
@@ -217,6 +217,22 @@
     <hint type="destinationlabel">
      <x>353</x>
      <y>310</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>passwordEdit</sender>
+   <signal>editingFinished()</signal>
+   <receiver>DriverNumberDialog</receiver>
+   <slot>checkPassword()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>259</x>
+     <y>116</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>276</x>
+     <y>347</y>
     </hint>
    </hints>
   </connection>

@@ -243,7 +243,7 @@ background:#1d1d1d;
         <height>20</height>
        </size>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,1,1,0,0,1,5,1,2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,1,1,0,0,1,5,1,0">
        <property name="spacing">
         <number>5</number>
        </property>
@@ -290,7 +290,7 @@ background:#1d1d1d;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/UI/images/gps.png</pixmap>
+          <pixmap resource="UI.qrc">:/UI/images/gps.png</pixmap>
          </property>
         </widget>
        </item>
@@ -312,7 +312,7 @@ background:#1d1d1d;
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/UI/images/connection-bad.png</pixmap>
+          <pixmap resource="UI.qrc">:/UI/images/connection-bad.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -384,7 +384,7 @@ background:#1d1d1d;
           </size>
          </property>
          <property name="text">
-          <string>00:00</string>
+          <string/>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -421,7 +421,7 @@ background:#1d1d1d;
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="standByPage1">
        <property name="sizePolicy">
@@ -754,6 +754,9 @@ background:#1d1d1d;
                   <italic>false</italic>
                   <bold>true</bold>
                  </font>
+                </property>
+                <property name="focusPolicy">
+                 <enum>Qt::NoFocus</enum>
                 </property>
                 <property name="text">
                  <string>ПОЗЫВНОЙ:
@@ -3181,7 +3184,9 @@ QPushButton[pressed=true] {
   <tabstop>pushButton_19</tabstop>
   <tabstop>taxiRateTableWidget</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="UI.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionExit</sender>
