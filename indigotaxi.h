@@ -43,6 +43,7 @@ public:
 	void log(QString message) { ui.serverMessage->setPlainText(message); }
 protected:
     void resizeEvent(QResizeEvent *event);
+    void setDPI(int _dpi);
 
 signals:
 	void reboot_application();

@@ -127,51 +127,15 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 #endif
 
 #ifdef UNDER_ANDROID
-    _dpi = (int) sqrt(_width*_width + _height*_height) / 7; // average screen size
+    _dpi = (int) sqrt(_width*_width + _height*_height) / 4; // average screen size
     qDebug() << "calculated DPI:" << _dpi;
+    setDPI(_dpi);
 #endif
 	orderReceiveTimer = new QTimer(this);
 	orderReceiveTimer->setSingleShot(false);
 	connect(orderReceiveTimer, SIGNAL(timeout()), SLOT(orderReceiveTimerTimeout()));
 
-	setProperty("_q_customDpiX", QVariant(_dpi));
-	setProperty("_q_customDpiY", QVariant(_dpi));
 
-    infoDialog->setProperty("_q_customDpiX", QVariant(_dpi));
-    infoDialog->setProperty("_q_customDpiY", QVariant(_dpi));
-    infoDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
-    infoDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
-	
-	confirmDialog->setProperty("_q_customDpiX", QVariant(_dpi));
-	confirmDialog->setProperty("_q_customDpiY", QVariant(_dpi));
-	confirmDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
-	confirmDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
-	
-	driverNumberDialog->setProperty("_q_customDpiX", QVariant(_dpi));
-	driverNumberDialog->setProperty("_q_customDpiY", QVariant(_dpi));
-	driverNumberDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
-
-	ui.regionList->setProperty("_q_customDpiX", QVariant(_dpi));
-	ui.regionList->setProperty("_q_customDpiY", QVariant(_dpi));
-
-	ui.regionListSettingsWidget->setProperty("_q_customDpiX", QVariant(_dpi));
-	ui.regionListSettingsWidget->setProperty("_q_customDpiY", QVariant(_dpi));
-	
-	ui.regionDetailsList->setProperty("_q_customDpiX", QVariant(_dpi));
-	ui.regionDetailsList->setProperty("_q_customDpiY", QVariant(_dpi));
-	
-	ui.messageTemplatesList->setProperty("_q_customDpiX", QVariant(_dpi));
-	ui.messageTemplatesList->setProperty("_q_customDpiY", QVariant(_dpi));
-
-	ui.taxiRateTableWidget->setProperty("_q_customDpiX", QVariant(_dpi));
-	ui.taxiRateTableWidget->setProperty("_q_customDpiY", QVariant(_dpi));
-
-	ui.settingsTabWidget->setProperty("_q_customDpiX", QVariant(_dpi));
-	ui.settingsTabWidget->setProperty("_q_customDpiY", QVariant(_dpi));
-
-    //int tab_width = _width / ui.settingsTabWidget->count() - 3;
-    //int tab_height = (int) _height * 0.15;
-    //ui.settingsTabWidget->setStyleSheet(QString("QTabBar::tab { width: %1px; height: %2px;}").arg(tab_width).arg(tab_height));
 
 	setCurrentScreenFromSettings();
 
@@ -208,6 +172,51 @@ void IndigoTaxi::resizeEvent(QResizeEvent *event)
     qDebug() << "resizing to width " << tab_width << " height " << tab_height;
 
     ui.settingsTabWidget->setStyleSheet(QString("QTabBar::tab { width: %1px; height: %2px;}").arg(tab_width).arg(tab_height));
+
+    infoDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
+    infoDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
+
+    confirmDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
+    confirmDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
+
+    driverNumberDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
+
+    int _dpi = (int) sqrt(_width*_width + _height*_height) / 4; // average screen size
+    qDebug() << "calculated DPI:" << _dpi;
+    setDPI(_dpi);
+}
+
+void IndigoTaxi::setDPI(int dpi)
+{
+    setProperty("_q_customDpiX", QVariant(_dpi));
+    setProperty("_q_customDpiY", QVariant(_dpi));
+
+    infoDialog->setProperty("_q_customDpiX", QVariant(_dpi));
+    infoDialog->setProperty("_q_customDpiY", QVariant(_dpi));
+
+    confirmDialog->setProperty("_q_customDpiX", QVariant(_dpi));
+    confirmDialog->setProperty("_q_customDpiY", QVariant(_dpi));
+
+    driverNumberDialog->setProperty("_q_customDpiX", QVariant(_dpi));
+    driverNumberDialog->setProperty("_q_customDpiY", QVariant(_dpi));
+
+    ui.regionList->setProperty("_q_customDpiX", QVariant(_dpi));
+    ui.regionList->setProperty("_q_customDpiY", QVariant(_dpi));
+
+    ui.regionListSettingsWidget->setProperty("_q_customDpiX", QVariant(_dpi));
+    ui.regionListSettingsWidget->setProperty("_q_customDpiY", QVariant(_dpi));
+
+    ui.regionDetailsList->setProperty("_q_customDpiX", QVariant(_dpi));
+    ui.regionDetailsList->setProperty("_q_customDpiY", QVariant(_dpi));
+
+    ui.messageTemplatesList->setProperty("_q_customDpiX", QVariant(_dpi));
+    ui.messageTemplatesList->setProperty("_q_customDpiY", QVariant(_dpi));
+
+    ui.taxiRateTableWidget->setProperty("_q_customDpiX", QVariant(_dpi));
+    ui.taxiRateTableWidget->setProperty("_q_customDpiY", QVariant(_dpi));
+
+    ui.settingsTabWidget->setProperty("_q_customDpiX", QVariant(_dpi));
+    ui.settingsTabWidget->setProperty("_q_customDpiY", QVariant(_dpi));
 }
 		
 IndigoTaxi::~IndigoTaxi()
@@ -834,17 +843,11 @@ void IndigoTaxi::connectedTimerTimeout()
 void IndigoTaxi::connectionStatus(bool status)
 {
 	if (status && !online) {
-		if (updateStartTimer->isActive()) {
-			updateStartTimer->stop();
-		} else if (!_updatePerformed) {
-			updateStartTimer->start();
-		}
-		
+
 		connectedTimer->start();
 		ui.connectionLabel->setPixmap(QPixmap(":/UI/images/connection-ok.png"));
 
-	} else if (!status && online) {
-		updateStartTimer->stop();
+    } else if (!status && online) {
 		connectedTimer->stop();
 		voiceLady->sayPhrase("NOCONNECTION");		
 		ui.connectionLabel->setPixmap(QPixmap(":/UI/images/connection-bad.png"));
