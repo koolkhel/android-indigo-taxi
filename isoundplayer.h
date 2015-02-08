@@ -16,8 +16,7 @@ public slots:
 	void playFileSystemSound(QString);
 	void playResourceSound(QString);
 private slots:
-    void stateChanged(QMediaPlayer::State state);
-    void mediaStatusChanged(QMediaPlayer::MediaStatus status);
+    void playingChanged();
 private:
     void flushQueue();
 
