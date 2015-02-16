@@ -421,7 +421,7 @@ background:#1d1d1d;
        </font>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="standByPage1">
        <property name="sizePolicy">
@@ -1074,6 +1074,9 @@ background:#1d1d1d;
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
               </property>
               <property name="text">
                <string>ПОЗЫВНОЙ
@@ -2513,7 +2516,7 @@ QPushButton[pressed=true] {
                <number>0</number>
               </property>
               <widget class="QWidget" name="systemSettingsPage1">
-               <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,1,0" columnstretch="1,2,2">
+               <layout class="QGridLayout" name="gridLayout_3" rowstretch="1,1" columnstretch="1,2,2">
                 <property name="leftMargin">
                  <number>5</number>
                 </property>

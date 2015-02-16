@@ -22,21 +22,30 @@ ISoundPlayer::~ISoundPlayer()
 }
 
 void ISoundPlayer::flushQueue()
-{
-    if (uris.empty())
+{    
+    urisLock.lock();
+
+    if (uris.empty()) {
+        qDebug() << "empty sound list";
+        urisLock.unlock();
+
         return;
+    }
 
     qDebug() << "flushQueue player state" << player->isPlaying();
-    if (player->isPlaying())
-        return;
+    if (player->isPlaying()) {
+        urisLock.unlock();
 
-    urisLock.lock();
+        return;
+    }
+
     QUrl uri = QUrl(uris.at(0));
+    uris.removeFirst();
+    urisLock.unlock();
+
     qDebug() << "flushQueue setMedia " << uri;
     player->setSource(uri);
     player->play();
-    uris.removeFirst();
-    urisLock.unlock();
 }
 
 void ISoundPlayer::playResourceSound(QString url)
@@ -65,7 +74,10 @@ void ISoundPlayer::playFileSystemSound(QString filename)
 void ISoundPlayer::playingChanged()
 {
     qDebug() << "player status " << player->isPlaying();
+
     if (!player->isPlaying()) {
         flushQueue();
+    } else if (!uris.empty()){
+        QTimer::singleShot(50, this, SLOT(playingChanged()));
     }
 }

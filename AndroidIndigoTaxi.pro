@@ -67,7 +67,7 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 OTHER_FILES += \
     android/AndroidManifest.xml\
-    android/src/ru/indigosystem/taxi/android/QtActivity.java
+    android/src/ru/indigosystem/taxi/android/MyQtActivity.java
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \

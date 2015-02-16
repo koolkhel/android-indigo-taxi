@@ -180,6 +180,7 @@ void IndigoTaxi::resizeEvent(QResizeEvent *event)
     confirmDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
 
     driverNumberDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
+    driverNumberDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
 
     int _dpi = (int) sqrt(_width*_width + _height*_height) / 4; // average screen size
     qDebug() << "calculated DPI:" << _dpi;
@@ -222,6 +223,12 @@ void IndigoTaxi::setDPI(int dpi)
 IndigoTaxi::~IndigoTaxi()
 {
 
+}
+
+void IndigoTaxi::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Close)
+        ;
 }
 
 void IndigoTaxi::changeBackLightClicked()
