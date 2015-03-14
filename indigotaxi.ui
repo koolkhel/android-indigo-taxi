@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>798</width>
+    <width>845</width>
     <height>487</height>
    </rect>
   </property>
@@ -101,7 +101,7 @@
 
 #finalPaymentAmountLabel {
 	font-weight: bold;
-	font: 40pt &quot;Segoe UI&quot;;
+	font: 32pt &quot;Segoe UI&quot;;
 }
 </string>
   </property>
@@ -421,7 +421,7 @@ background:#1d1d1d;
        </font>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="standByPage1">
        <property name="sizePolicy">
@@ -1339,14 +1339,17 @@ background:#1d1d1d;
          </widget>
         </item>
         <item>
-         <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,1,1,1,1" columnstretch="2,1,1,1,4">
+         <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,1,1,1,1" columnstretch="2,2,1,1,4" columnminimumwidth="230,115,110,100,0">
           <property name="leftMargin">
            <number>5</number>
           </property>
           <property name="rightMargin">
            <number>5</number>
           </property>
-          <property name="spacing">
+          <property name="horizontalSpacing">
+           <number>2</number>
+          </property>
+          <property name="verticalSpacing">
            <number>5</number>
           </property>
           <item row="2" column="2">
@@ -1381,12 +1384,15 @@ background:#1d1d1d;
            <widget class="QLabel" name="kmgTaxiRateLabel">
             <property name="minimumSize">
              <size>
-              <width>70</width>
+              <width>0</width>
               <height>0</height>
              </size>
             </property>
             <property name="text">
              <string>17.0/17.0</string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -1428,7 +1434,7 @@ background:#1d1d1d;
           <item row="4" column="2">
            <widget class="QLabel" name="finalMileageLabel">
             <property name="text">
-             <string>0/0</string>
+             <string>17.0/17.0</string>
             </property>
            </widget>
           </item>
@@ -1477,7 +1483,7 @@ background:#1d1d1d;
           <item row="5" column="2">
            <widget class="QLabel" name="finalOverloadLabel">
             <property name="text">
-             <string>0/0</string>
+             <string>24.0/24.0</string>
             </property>
            </widget>
           </item>
@@ -1486,14 +1492,17 @@ background:#1d1d1d;
             <property name="font">
              <font>
               <family>Segoe UI</family>
-              <pointsize>40</pointsize>
+              <pointsize>32</pointsize>
               <weight>50</weight>
               <italic>false</italic>
               <bold>false</bold>
              </font>
             </property>
             <property name="text">
-             <string>9999р.</string>
+             <string>9999р</string>
+            </property>
+            <property name="scaledContents">
+             <bool>true</bool>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
