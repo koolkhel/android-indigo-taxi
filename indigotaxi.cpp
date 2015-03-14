@@ -103,8 +103,9 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 	iSoundPlayer = new ISoundPlayer();
     soundThread = new QThread();
 
-	iSoundPlayer->moveToThread(soundThread);
     soundThread->start();
+	iSoundPlayer->moveToThread(soundThread);
+    iSoundPlayer->move(soundThread);
 
     connect(voiceLady, SIGNAL(playSound(QString)), iSoundPlayer,
             SLOT(playResourceSound(QString)));
@@ -897,7 +898,7 @@ void IndigoTaxi::paytimeClick()
 		ui.finalTalonLabel->setText("");
 	}
 
-	ui.finalPaymentAmountLabel->setText(QString("%1р.").arg(payment));
+    ui.finalPaymentAmountLabel->setText(QString("%1р").arg(payment));
 	
 	// километры
 	ui.finalMileageLabel->setText(QString("%1/%2")
@@ -1307,13 +1308,14 @@ void IndigoTaxi::orderReceiveTimerTimeout()
 	if (orderReceiveCounter > 0) {
 		orderReceiveCounter--;
 	} else {
+        QString address = iTaxiOrder->address();
 		voiceLady->sayPhrase("ORDERABORT");
 		backend->sendOrderEvent(hello_TaxiEvent_NOT_ANSWER, iTaxiOrder);
 		saveOrderHistory(iTaxiOrder, ITaxiOrder::ABORT_TIMEOUT);
 		destroyCurrentOrder();
 		clearMessageClick();
 		orderReceiveTimer->stop();
-		infoDialog->info("ЗАКАЗ НА АДРЕС " + iTaxiOrder->address() +  " ОТМЕНЁН ПО ПРИЧИНЕ ОТСУТСТВИЯ ОТВЕТА ВОДИТЕЛЯ НА ЗАПРОС ДИСПЕТЧЕРА");		
+        infoDialog->info("ЗАКАЗ НА АДРЕС " + address +  " ОТМЕНЁН ПО ПРИЧИНЕ ОТСУТСТВИЯ ОТВЕТА ВОДИТЕЛЯ НА ЗАПРОС ДИСПЕТЧЕРА");
 	}
 }
 
