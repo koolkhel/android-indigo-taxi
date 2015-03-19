@@ -1,0 +1,12 @@
+generatedfiles/*
+*.user
+STANDARDSDK_500 (ARMV4I)/*
+Win32/*
+*.pb.cc
+*.pb.h
+CityTaxi.chm
+my.rcc
+DebugRelease/*
+*.rcc
+*.pro.user.*
+
