@@ -2,23 +2,32 @@
 #include <QDebug>
 
 #include "isoundplayer.h"
-#ifndef UNDER_ANDROID
-#include "windows.h"
-#else
-#include <QSound>
-#endif
-
+#include "jnisoundeffect.h"
+#include "qtsoundeffect.h"
 
 ISoundPlayer::ISoundPlayer(QObject *parent)
 	: QObject(parent)
 {
-    player = new QSoundEffect(this);
-    connect(player, SIGNAL(playingChanged()), SLOT(playingChanged()));
+#ifdef UNDER_ANDROID
+    player = new JNISoundEffect();
+#else
+    player = new QtSoundEffect();
+#endif    
 }
 
 ISoundPlayer::~ISoundPlayer()
 {
 
+}
+
+void ISoundPlayer::move(QThread *to)
+{
+    thread = to;
+    player->moveToThread(to);
+    connect(player, SIGNAL(playingChanged()), SLOT(playingChanged()),
+            Qt::QueuedConnection);
+    connect(this, SIGNAL(playSoundSignal(QString)),
+            player, SLOT(playSound(QString)), Qt::QueuedConnection);
 }
 
 void ISoundPlayer::flushQueue()
@@ -31,7 +40,6 @@ void ISoundPlayer::flushQueue()
 
         return;
     }
-
     qDebug() << "flushQueue player state" << player->isPlaying();
     if (player->isPlaying()) {
         urisLock.unlock();
@@ -44,8 +52,8 @@ void ISoundPlayer::flushQueue()
     urisLock.unlock();
 
     qDebug() << "flushQueue setMedia " << uri;
-    player->setSource(uri);
-    player->play();
+
+    emit playSoundSignal(uri.toString());
 }
 
 void ISoundPlayer::playResourceSound(QString url)
@@ -78,6 +86,6 @@ void ISoundPlayer::playingChanged()
     if (!player->isPlaying()) {
         flushQueue();
     } else if (!uris.empty()){
-        QTimer::singleShot(50, this, SLOT(playingChanged()));
+        QTimer::singleShot(100, this, SLOT(playingChanged()));
     }
 }

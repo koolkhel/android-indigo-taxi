@@ -108,9 +108,9 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
     iSoundPlayer->move(soundThread);
 
     connect(voiceLady, SIGNAL(playSound(QString)), iSoundPlayer,
-            SLOT(playResourceSound(QString)));
+            SLOT(playResourceSound(QString)), Qt::QueuedConnection);
     connect(voiceLady, SIGNAL(playSoundFile(QString)), iSoundPlayer,
-            SLOT(playFileSystemSound(QString)));
+            SLOT(playFileSystemSound(QString)), Qt::QueuedConnection);
 
 	//ui.driverNameLineEdit->setProperty("keyboard",true); // enable the keyboard. when there is no validator set the keyboard will show
 	//aTextLineEdit->setProperty("maxLength",25); //this can be used to limit the length of the string
@@ -384,6 +384,7 @@ void IndigoTaxi::startClientMoveClicked()
 
 void IndigoTaxi::startClientMove()
 {	
+    orderReceiveTimer->stop();
 	// смена района таксиста
 	if (iTaxiOrder == NULL && changeRegion)
 	{
@@ -746,19 +747,19 @@ void IndigoTaxi::updateTaxiInfo()
 	} else {
 		intercity(0);
 	
-		qDebug() << "inside town" << QString::fromUtf8(taxiInfo.city_name().c_str());
+        // qDebug() << "inside town" << QString::fromUtf8(taxiInfo.city_name().c_str());
 	}
 	
 	if (taxiInfo.inside_parking()) {
 		currentParkingCost = taxiInfo.parking_price();
 		currentParkingId = taxiInfo.parking_id();
 
-		qDebug() << "inside parking" << currentParkingId << "cost" << currentParkingCost;
+        // qDebug() << "inside parking" << currentParkingId << "cost" << currentParkingCost;
 	} else {
 		currentParkingCost = 0;
 		currentParkingId = 0;
 
-		qDebug() << "outside parking";
+        // qDebug() << "outside parking";
 	}
 	
 
@@ -1360,7 +1361,7 @@ void IndigoTaxi::newPaymentCalculated(int payment)
 
 void IndigoTaxi::newSpeed(int speed_kmh)
 {
-	qDebug() << "newSpeed" << speed_kmh;
+    // qDebug() << "newSpeed" << speed_kmh;
 	ui.speedValueLabel->setText(QString("%1 км/ч").arg(speed_kmh));
 }
 
@@ -1455,7 +1456,7 @@ void IndigoTaxi::movementStartFiltered(bool started)
 
 void IndigoTaxi::movementStart(int start)
 {
-	qDebug() << (start ? "movement START" : "movement STOP");
+    // qDebug() << (start ? "movement START" : "movement STOP");
 
 	emit orderMovementStart(start);
 	movementStarted = start == 1;

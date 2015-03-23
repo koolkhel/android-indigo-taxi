@@ -1,12 +1,13 @@
 #include "voicelady.h"
 #include <QDebug>
-#include <QSound>
 #include <QtCore>
+
+VoiceLady *voiceLady = NULL;
 
 VoiceLady::VoiceLady(QObject *parent)
 	: QObject(parent)
 {
-
+    voiceLady = this;
 }
 
 void VoiceLady::speakMoney(int amount)
@@ -126,10 +127,7 @@ void VoiceLady::click()
 void VoiceLady::sayPhrase(QString name)
 {
 	QString resourceName = ":/Sound/" + name;
-	// FIXME temporary sound disable
-//#ifdef UNDER_CE
 	emit playSound(resourceName);	
-//#endif
 }
 
 VoiceLady::~VoiceLady()

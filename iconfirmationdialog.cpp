@@ -1,6 +1,6 @@
 #include "iconfirmationdialog.h"
 
-#include <QSound>
+#include "voicelady.h"
 
 IConfirmationDialog::IConfirmationDialog(QWidget *parent)
 	: QDialog(parent)
@@ -38,5 +38,5 @@ bool IConfirmationDialog::askYesNo(QString text)
 
 void IConfirmationDialog::clickSound()
 {
-	QSound::play("click.wav");
+    voiceLady->click();
 }

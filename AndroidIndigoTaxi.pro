@@ -21,6 +21,7 @@ win32-g++ {
 android-g++ {
     DEFINES += UNDER_ANDROID
     LIBS += -lprotobuf-2.5.0
+    QT += androidextras
 }
 
 HEADERS += ./backend.h \
@@ -37,7 +38,10 @@ HEADERS += ./backend.h \
     ./resource.h \
     ./settingsform.h \
     ./taxiorder.h \
-    ./voicelady.h
+    ./voicelady.h \
+    ./soundeffect.h \
+    ./jnisoundeffect.h \
+    ./qtsoundeffect.h
 SOURCES += ./backend.cpp \
     ./hello.pb.cc \
     ./downloadmanager.cpp \
@@ -52,7 +56,10 @@ SOURCES += ./backend.cpp \
     ./main.cpp \
     ./settingsform.cpp \
     ./taxiorder.cpp \
-    ./voicelady.cpp
+    ./voicelady.cpp \
+    ./soundeffect.cpp \
+    ./jnisoundeffect.cpp \
+    ./qtsoundeffect.cpp
 FORMS += ./drivernumberdialog.ui \
     ./iconfirmationdialog.ui \
     ./iinfodialog.ui \
@@ -67,7 +74,8 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 OTHER_FILES += \
     android/AndroidManifest.xml\
-    android/src/ru/indigosystem/taxi/android/MyQtActivity.java
+    android/src/ru/indigosystem/taxi/android/MyQtActivity.java \
+    android/src/ru/indigosystem/taxi/android/AudioClient.java
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \

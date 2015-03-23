@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QSoundEffect>
 #include <QMutex>
+#include <QThread>
+
+#include "soundeffect.h"
 
 class ISoundPlayer : public QObject
 {
@@ -12,6 +15,9 @@ class ISoundPlayer : public QObject
 public:
 	ISoundPlayer(QObject *parent = 0);
 	~ISoundPlayer();
+    void move(QThread *to);
+signals:
+    void playSoundSignal(QString);
 public slots:
 	void playFileSystemSound(QString);
 	void playResourceSound(QString);
@@ -20,7 +26,8 @@ private slots:
 private:
     void flushQueue();
 
-    QSoundEffect *player;
+    SoundEffect *player;
+    QThread *thread;
     QStringList uris;
     QMutex urisLock;
 };

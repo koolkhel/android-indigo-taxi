@@ -3,6 +3,10 @@
 
 #include <QObject>
 
+class VoiceLady;
+
+extern VoiceLady *voiceLady;
+
 class VoiceLady : public QObject
 {
 	Q_OBJECT
