@@ -53,16 +53,24 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 	connect(backend, SIGNAL(protobuf_message(hello)), SLOT(protobuf_message(hello)), Qt::QueuedConnection);
 	connect(backend, SIGNAL(connectedToServer(bool)), SLOT(connectionStatus(bool)));
 	connect(backend, SIGNAL(driverNameChanged(int)), SLOT(driverNameChanged(int)));
+    connect(backend, SIGNAL(taxiOrgChanged(int)), SLOT(taxiOrgChanged(int)));
 	connect(backend, SIGNAL(newSpeed(int)), SLOT(newSpeed(int)));
 	connect(backend, SIGNAL(newSatellitesUsed(int)), SLOT(newSatellitesUsed(int)));
 	connect(backend, SIGNAL(movementStart(int)), SLOT(movementStart(int)));
 	//settingsForm->setBackend(backend);
 
 	settingsIniFile = new QSettings("indigotaxi.ini", QSettings::IniFormat, this);
-	settingsIniFile->beginGroup("main");
-	int driverName = settingsIniFile->value("driverName", QVariant(500)).toInt();
+
+    settingsIniFile->beginGroup("main");
+
+    int driverName = settingsIniFile->value("driverName", QVariant(500)).toInt();
+    int taxiId = settingsIniFile->value("taxiId", QVariant(4)).toInt();
+
 	settingsIniFile->endGroup();
-	backend->setDriverName(driverName);
+
+    backend->setDriverName(driverName);
+    backend->setTaxiId(taxiId);
+
 	backend->sendEvent(hello_TaxiEvent_GET_INFO);
 
 	//ui.versionLabel->setText(version);
@@ -272,12 +280,23 @@ void IndigoTaxi::backlight(bool onOff)
 
 void IndigoTaxi::changeDriverNumberClicked()
 {
-	if (driverNumberDialog->showPassword()) {
+    if (driverNumberDialog->showPassword(DriverNumberDialog::DRIVER_NUMBER)) {
 		backend->setDriverName(driverNumberDialog->driverNumber());
 		infoDialog->info("ПОЗЫВНОЙ СМЕНЁН");
 	} else {
 		infoDialog->info("ОШИБКА: НЕВЕРНЫЙ ПАРОЛЬ");
 	}
+}
+
+void IndigoTaxi::changeTaxiOrgClicked()
+{
+    if (driverNumberDialog->showPassword(DriverNumberDialog::TAXI_ORG_NUMBER)) {
+        int my_taxiOrg = driverNumberDialog->driverNumber();
+        backend->setTaxiId(my_taxiOrg);
+        infoDialog->info("ОРГАНИЗАЦИЯ СМЕНЁНА НА " + getCurrentTaxiName());
+    } else {
+        infoDialog->info("ОШИБКА: НЕВЕРНЫЙ ПАРОЛЬ");
+    }
 }
 
 void IndigoTaxi::setCurrentScreenFromSettings()
@@ -454,7 +473,7 @@ void IndigoTaxi::startClientMove()
 	ui.stackedWidget->setCurrentWidget(ui.orderPage2);
 
 	if (!newDirection) {
-		voiceLady->sayPhrase("GREETING");
+        voiceLady->sayPhrase(getCurrentGreeting());
 	}
 
 	newDirection = false;
@@ -1104,9 +1123,49 @@ void IndigoTaxi::driverNameChanged(int driverName)
 	settingsIniFile->sync();
 }
 
-void IndigoTaxi::driverNameEdited(QString newValue)
+QString IndigoTaxi::getCurrentGreeting()
 {
-	backend->setDriverName(newValue.toInt());
+    QString result = "GREETING";
+    switch (backend->getTaxiId()) {
+    case IndigoTaxi::TAXI_ELITE:
+        result = "GREETINGELIT";
+        break;
+    case IndigoTaxi::TAXI_LUX:
+        result = "GREETINGLUX";
+    break;
+    case IndigoTaxi::TAXI_VIRAGE:
+        result = "GREETINGVIRAGE";
+    break;
+
+    }
+    return result;
+}
+
+QString IndigoTaxi::getCurrentTaxiName()
+{
+    QString result = "Такси ";
+    switch (backend->getTaxiId()) {
+    case IndigoTaxi::TAXI_ELITE:
+        result += "Элит";
+        break;
+    case IndigoTaxi::TAXI_LUX:
+        result += "Люкс";
+    break;
+    case IndigoTaxi::TAXI_VIRAGE:
+        result += "Вираж";
+    break;
+
+    }
+    return result;
+}
+
+void IndigoTaxi::taxiOrgChanged(int taxiOrgID)
+{
+    ui.taxiNameLabel->setText(getCurrentTaxiName());
+    settingsIniFile->beginGroup("main");
+    settingsIniFile->setValue("taxiId", QVariant(taxiOrgID));
+    settingsIniFile->endGroup();
+    settingsIniFile->sync();
 }
 
 void IndigoTaxi::awayButtonClicked()

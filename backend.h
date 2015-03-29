@@ -36,12 +36,16 @@ public:
 	~Backend();
 	void setDriverName(int _driverName);
 	int getDriverName() { return driverName; }
+    void setTaxiId(int _taxiId);
+    int getTaxiId() { return taxiId;};
 
 signals:
 	// передаётся по значению
 	void protobuf_message(hello message);
 	void connectedToServer(bool status);
 	void driverNameChanged(int driverName);
+    void taxiOrgChanged(int taxiId);
+
 	void newPosition(QGeoCoordinate coordinate);
 	void newSpeed(int speed_kmh);
 	void newSatellitesUsed(int satellitesUsed);

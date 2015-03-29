@@ -1,9 +1,9 @@
 #include "backend.h"
 #include "logger.h"
 
-//#define SERVER_ADDRESS "87.117.17.221"
+#define SERVER_ADDRESS "87.117.17.221"
 //#define SERVER_ADDRESS "192.168.91.1"
-#define SERVER_ADDRESS "192.168.1.6"
+//#define SERVER_ADDRESS "192.168.1.6"
 //#define SERVER_ADDRESS "indigosystem.ru"
 #define SERVER_PORT 9099
 #define GPS_SEND_INTERVAL (5 * 1000)
@@ -100,6 +100,15 @@ Backend::~Backend()
 void Backend::setDriverName(int _driverName) {
 	driverName = _driverName;
 	emit driverNameChanged(driverName);
+}
+
+void Backend::setTaxiId(int _taxiId) {
+    taxiId = _taxiId;
+
+    // обновить тарифы и т.д.
+    sendEvent(hello_TaxiEvent_GET_INFO);
+
+    emit taxiOrgChanged(taxiId);
 }
 
 // Static.

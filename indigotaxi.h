@@ -41,6 +41,14 @@ public:
 	~IndigoTaxi();
 	static int const EXIT_CODE_REBOOT;
 	void log(QString message) { ui.serverMessage->setPlainText(message); }
+
+    enum taxi_org_t {
+        TAXI_NOORG = 0,
+        TAXI_VIRAGE = 1,
+        TAXI_ELITE = 2,
+        TAXI_PLUS = 3,
+        TAXI_LUX = 4
+    };
 protected:
     void resizeEvent(QResizeEvent *event);
     void keyPressEvent(QKeyEvent* event);
@@ -115,6 +123,8 @@ public slots:
 
 	// page 4
 	void driverNameChanged(int driverName);
+    void taxiOrgChanged(int taxiOrgID);
+
 	void driverRegionSelectClicked();
 	void privateClientButtonClicked();
 
@@ -134,14 +144,14 @@ public slots:
 	void techhelpBackClicked();
 	void showOrderHistoryClicked();
 	void changeDriverNumberClicked();
+    void changeTaxiOrgClicked();
 
 	void playClick();
 
 	void dinnerStartClicked();
 	void dinnerHandleAnswer(hello var);
-	void dinnerStopClicked();
+    void dinnerStopClicked();
 
-	void driverNameEdited(QString newValue);
 	void switchColorsClicked();
 	void rebootSystem();
 
@@ -195,6 +205,9 @@ private:
 
 	double currentParkingCost;
 	int currentParkingId;
+
+    QString getCurrentGreeting();
+    QString getCurrentTaxiName();
 
 	QThread *soundThread;
 	ISoundPlayer *iSoundPlayer;

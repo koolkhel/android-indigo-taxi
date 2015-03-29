@@ -33,10 +33,23 @@ void DriverNumberDialog::setDriverName(QString driverName)
 	ui.driverNumberLineEdit->setText(driverName);
 }
 
-bool DriverNumberDialog::showPassword() 
+bool DriverNumberDialog::showPassword(int mode)
 {
     bool result = false;
-//    qApp->inputMethod()->show();
+
+    switch (mode) {
+    case DRIVER_NUMBER:
+        ui.label->setText("ПОЗЫВНОЙ");
+        ui.driverNumberLineEdit->setText("");
+        ui.passwordEdit->setText("");
+        break;
+    case TAXI_ORG_NUMBER:
+        ui.driverNumberLineEdit->setText("");
+        ui.passwordEdit->setText("");
+        ui.label->setText("ТАКСИ #");
+        break;
+    }
+
     result = exec() == QDialog::Accepted;
     qApp->inputMethod()->hide();
     return result;

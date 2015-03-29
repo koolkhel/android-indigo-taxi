@@ -421,7 +421,7 @@ background:#1d1d1d;
        </font>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="standByPage1">
        <property name="sizePolicy">
@@ -1670,7 +1670,7 @@ background:#1d1d1d;
            <enum>QTabWidget::Rounded</enum>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>1</number>
           </property>
           <property name="elideMode">
            <enum>Qt::ElideNone</enum>
@@ -1963,7 +1963,7 @@ background:#1d1d1d;
                <number>0</number>
               </property>
               <widget class="QWidget" name="driverCabinetPage1">
-               <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,1,1,1" columnstretch="1,2,2">
+               <layout class="QGridLayout" name="gridLayout_2" rowstretch="1,1,1,1" columnstretch="1,2,2,0">
                 <property name="leftMargin">
                  <number>0</number>
                 </property>
@@ -1979,6 +1979,19 @@ background:#1d1d1d;
                 <property name="spacing">
                  <number>5</number>
                 </property>
+                <item row="0" column="0" rowspan="4">
+                 <widget class="QPushButton" name="pushButton">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Вернуться</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="3" column="1">
                  <widget class="QPushButton" name="techhelpButton">
                   <property name="sizePolicy">
@@ -1998,52 +2011,6 @@ background:#1d1d1d;
                   </property>
                   <property name="text">
                    <string>Техпомощь</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2">
-                 <layout class="QVBoxLayout" name="verticalLayout_24" stretch="0">
-                  <property name="spacing">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QPushButton" name="pushButton_24">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="text">
-                     <string>Сменить позывной</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QPushButton" name="orderHistoryButton">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Заказы</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QPushButton" name="messageHistoryButton">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>История</string>
                   </property>
                  </widget>
                 </item>
@@ -2076,6 +2043,71 @@ QPushButton[pressed=true] {
                    <bool>false</bool>
                   </property>
                  </widget>
+                </item>
+                <item row="0" column="3">
+                 <layout class="QVBoxLayout" name="verticalLayout_24" stretch="">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                 </layout>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QPushButton" name="messageHistoryButton">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>История</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QPushButton" name="orderHistoryButton">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Заказы</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <layout class="QHBoxLayout" name="horizontalLayout_21" stretch="1,1">
+                  <item>
+                   <widget class="QPushButton" name="pushButton_24">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>Сменить
+позывной</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_12">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>Сменить
+организацию</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </item>
                 <item row="1" column="2">
                  <widget class="QPushButton" name="dinnerButton">
@@ -2143,19 +2175,6 @@ QPushButton[pressed=true] {
                   </property>
                   <property name="text">
                    <string>Вышел из машины</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0" rowspan="4">
-                 <widget class="QPushButton" name="pushButton">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Вернуться</string>
                   </property>
                  </widget>
                 </item>
@@ -3511,8 +3530,8 @@ QPushButton[pressed=true] {
    <slot>exitButtonClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>193</x>
-     <y>207</y>
+     <x>332</x>
+     <y>464</y>
     </hint>
     <hint type="destinationlabel">
      <x>320</x>
@@ -4039,8 +4058,8 @@ QPushButton[pressed=true] {
    <slot>playClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>506</x>
-     <y>68</y>
+     <x>835</x>
+     <y>129</y>
     </hint>
     <hint type="destinationlabel">
      <x>378</x>
@@ -4055,8 +4074,8 @@ QPushButton[pressed=true] {
    <slot>playClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>506</x>
-     <y>207</y>
+     <x>835</x>
+     <y>464</y>
     </hint>
     <hint type="destinationlabel">
      <x>335</x>
@@ -4071,8 +4090,8 @@ QPushButton[pressed=true] {
    <slot>playClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>193</x>
-     <y>207</y>
+     <x>332</x>
+     <y>464</y>
     </hint>
     <hint type="destinationlabel">
      <x>325</x>
@@ -4151,8 +4170,8 @@ QPushButton[pressed=true] {
    <slot>backToRegionsSettings()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>17</x>
-     <y>94</y>
+     <x>14</x>
+     <y>95</y>
     </hint>
     <hint type="destinationlabel">
      <x>69</x>
@@ -4167,8 +4186,8 @@ QPushButton[pressed=true] {
    <slot>changeDriverRegionStopClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>790</x>
-     <y>154</y>
+     <x>106</x>
+     <y>95</y>
     </hint>
     <hint type="destinationlabel">
      <x>578</x>
@@ -4231,8 +4250,8 @@ QPushButton[pressed=true] {
    <slot>taxiRateShowButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>506</x>
-     <y>68</y>
+     <x>835</x>
+     <y>129</y>
     </hint>
     <hint type="destinationlabel">
      <x>589</x>
@@ -4343,8 +4362,8 @@ QPushButton[pressed=true] {
    <slot>messagesShowListClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>365</x>
-     <y>72</y>
+     <x>597</x>
+     <y>133</y>
     </hint>
     <hint type="destinationlabel">
      <x>292</x>
@@ -4391,8 +4410,8 @@ QPushButton[pressed=true] {
    <slot>changeDriverNumberClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>789</x>
-     <y>141</y>
+     <x>663</x>
+     <y>163</y>
     </hint>
     <hint type="destinationlabel">
      <x>555</x>
@@ -4455,8 +4474,8 @@ QPushButton[pressed=true] {
    <slot>privateClientButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>365</x>
-     <y>281</y>
+     <x>597</x>
+     <y>477</y>
     </hint>
     <hint type="destinationlabel">
      <x>346</x>
@@ -4471,8 +4490,8 @@ QPushButton[pressed=true] {
    <slot>clientNotExit()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>588</x>
-     <y>72</y>
+     <x>835</x>
+     <y>133</y>
     </hint>
     <hint type="destinationlabel">
      <x>532</x>
@@ -4487,8 +4506,8 @@ QPushButton[pressed=true] {
    <slot>emptyTripClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>588</x>
-     <y>281</y>
+     <x>835</x>
+     <y>477</y>
     </hint>
     <hint type="destinationlabel">
      <x>572</x>
@@ -4503,8 +4522,8 @@ QPushButton[pressed=true] {
    <slot>playClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>588</x>
-     <y>72</y>
+     <x>835</x>
+     <y>133</y>
     </hint>
     <hint type="destinationlabel">
      <x>548</x>
@@ -4519,8 +4538,8 @@ QPushButton[pressed=true] {
    <slot>playClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>588</x>
-     <y>281</y>
+     <x>835</x>
+     <y>477</y>
     </hint>
     <hint type="destinationlabel">
      <x>553</x>
@@ -4535,8 +4554,8 @@ QPushButton[pressed=true] {
    <slot>playClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>365</x>
-     <y>72</y>
+     <x>597</x>
+     <y>133</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -4583,8 +4602,8 @@ QPushButton[pressed=true] {
    <slot>playClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>365</x>
-     <y>281</y>
+     <x>597</x>
+     <y>477</y>
     </hint>
     <hint type="destinationlabel">
      <x>338</x>
@@ -4615,8 +4634,8 @@ QPushButton[pressed=true] {
    <slot>infoClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>506</x>
-     <y>207</y>
+     <x>835</x>
+     <y>464</y>
     </hint>
     <hint type="destinationlabel">
      <x>591</x>
@@ -4669,6 +4688,22 @@ QPushButton[pressed=true] {
     <hint type="destinationlabel">
      <x>398</x>
      <y>243</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_12</sender>
+   <signal>clicked()</signal>
+   <receiver>IndigoTaxiClass</receiver>
+   <slot>changeTaxiOrgClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>730</x>
+     <y>102</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>733</x>
+     <y>-20</y>
     </hint>
    </hints>
   </connection>
@@ -4732,5 +4767,6 @@ QPushButton[pressed=true] {
   <slot>switchColorsClicked()</slot>
   <slot>regionSettingsTabWidgetChanged(int)</slot>
   <slot>changeBackLightClicked()</slot>
+  <slot>changeTaxiOrgClicked()</slot>
  </slots>
 </ui>
