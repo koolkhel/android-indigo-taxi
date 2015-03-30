@@ -75,11 +75,12 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 OTHER_FILES += \
     android/AndroidManifest.xml\
     android/src/ru/indigosystem/taxi/android/MyQtActivity.java \
-    android/src/ru/indigosystem/taxi/android/AudioClient.java
+    android/src/ru/indigosystem/taxi/android/AudioClient.java \
+    android/res/values/libs.xml \
+    android/build.gradle
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
         $$PWD/android/libs/armeabi-v7a/libprotobuf-2.5.0.so \
         $$PWD/android/libs/armeabi-v7a/libgnustl_shared.so
 }
-

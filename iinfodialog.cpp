@@ -21,6 +21,8 @@ void IInfoDialog::setText(QString text)
 void IInfoDialog::info(QString text)
 {
 	setText(text);
+    // FIXME
+    setGeometry(0, 36, 800, 444);
 	exec();
 }
 

@@ -50,6 +50,8 @@ bool DriverNumberDialog::showPassword(int mode)
         break;
     }
 
+    // FIXME
+    setGeometry(0, 36, 800, 444);
     result = exec() == QDialog::Accepted;
     qApp->inputMethod()->hide();
     return result;

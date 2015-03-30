@@ -24,6 +24,8 @@ bool IConfirmationDialog::ask(QString text)
 	ui.pushButton_2->setText("ОК");
 	ui.textBrowser->setFontPointSize(16);
 	setText(text);
+    // FIXME
+    setGeometry(0, 36, 800, 444);
 	return exec() == QDialog::Accepted;
 }
 

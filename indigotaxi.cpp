@@ -140,6 +140,8 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
     qDebug() << "calculated DPI:" << _dpi;
     setDPI(_dpi);
 #endif
+
+    resizeEvent(NULL);
 	orderReceiveTimer = new QTimer(this);
 	orderReceiveTimer->setSingleShot(false);
 	connect(orderReceiveTimer, SIGNAL(timeout()), SLOT(orderReceiveTimerTimeout()));
@@ -182,14 +184,14 @@ void IndigoTaxi::resizeEvent(QResizeEvent *event)
 
     ui.settingsTabWidget->setStyleSheet(QString("QTabBar::tab { width: %1px; height: %2px;}").arg(tab_width).arg(tab_height));
 
-    infoDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
-    infoDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
+    infoDialog->setMinimumSize((int) _width * 1.0, (int) _height * 0.9);
+    infoDialog->setMaximumSize((int) _width * 1.0, (int) _height * 0.9);
 
-    confirmDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
-    confirmDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
+    confirmDialog->setMinimumSize((int) _width * 1.0, (int) _height * 0.9);
+    confirmDialog->setMaximumSize((int) _width * 1.0, (int) _height * 0.9);
 
-    driverNumberDialog->setMinimumSize((int) _width * 0.8, (int) _height * 0.9);
-    driverNumberDialog->setMaximumSize((int) _width * 0.8, (int) _height * 0.9);
+    driverNumberDialog->setMinimumSize((int) _width * 1.0, (int) _height * 0.9);
+    driverNumberDialog->setMaximumSize((int) _width * 10, (int) _height * 0.9);
 
     int _dpi = (int) sqrt(_width*_width + _height*_height) / 4; // average screen size
     qDebug() << "calculated DPI:" << _dpi;
@@ -1051,7 +1053,12 @@ void IndigoTaxi::enableDutyUI(bool enable)
 void IndigoTaxi::dutyButtonClicked(bool pressed)
 {
 	if (!ui.dutyStart->property("pressed").toBool()) {
-		if (confirmDialog->ask("Вы подтверждаете начало смены?")) {
+        if (!online) {
+            infoDialog->info("НЕВОЗМОЖНО НАЧАТЬ СМЕНУ, ТАК КАК НЕ УСТАНОВЛЕНА СВЯЗЬ С ИНТЕРНЕТОМ. ДОЖДИТЕСЬ СОЕДИНЕНИЯ!");
+            return;
+        }
+
+        if (confirmDialog->ask("Вы подтверждаете начало смены?")) {
 			backend->sendEvent(hello_TaxiEvent_ARRIVED);
 			enableDutyUI(true);
 			infoDialog->info("Смена начата! Выберите район");

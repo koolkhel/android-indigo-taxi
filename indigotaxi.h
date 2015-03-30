@@ -50,7 +50,7 @@ public:
         TAXI_LUX = 4
     };
 protected:
-    void resizeEvent(QResizeEvent *event);
+    Q_INVOKABLE void resizeEvent(QResizeEvent *event = NULL);
     void keyPressEvent(QKeyEvent* event);
     void setDPI(int _dpi);
 

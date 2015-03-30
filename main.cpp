@@ -126,7 +126,7 @@ Debug: "WindowsMobile"
 		w.showFullScreen();
 #else
 
-		w.show();
+        w.showNormal();
 #endif
 
 		qDebug() << "screen height:" << QApplication::desktop()->heightMM() << "width:" << QApplication::desktop()->widthMM();
