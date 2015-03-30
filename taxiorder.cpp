@@ -7,7 +7,9 @@ ITaxiOrder::ITaxiOrder(int _order_id, TaxiRatePeriod _taxiRate, float _parkingCo
 	
 	_mileage_city(0), 
 	
-	_total_travel_time_seconds(0), 
+    _total_travel_time_seconds(0),
+    _is_bonus(false),
+    _bonus_seconds(0),
 	seconds_stops(0), seconds_moving(0), seconds_client_stops(0), seconds_traincross_stops(0),
 	
 	_out_of_city_rate(0),
@@ -66,7 +68,9 @@ void ITaxiOrder::measureTimes()
 	{
 		// тут была фильтрация по времени
 		emit movementStartFiltered(false);
-		seconds_client_stops++;
+        if (!isBonusTime()) {
+            seconds_client_stops++;
+        }
 	}
 
 	emit newTimeMovement(seconds_moving);
@@ -133,8 +137,22 @@ int ITaxiOrder::calculateSum()
 	// пробки
 	// double stops = taxiRate.car_min() * 0.5 * minutesStops();
 
-	int value = ROUND_UPPER(car_in + moneyCity() + client_stops) +
+    int value = 0;
+
+    if (getBonus()) {
+        if (isBonusTime()) {
+            value = 0;
+            emit bonusRide(true);
+        } else { // только с этого момента вновь должен считаться километраж, но без стоимости подачи
+            value = ROUND_UPPER(moneyCity() + client_stops) + moneyMg();
+            emit bonusRide(false);
+        }
+
+    } else {
+        value = ROUND_UPPER(car_in + moneyCity() + client_stops) +
 				   moneyMg();
+        emit bonusRide(false);
+    }
 	
 	// округляем рубли к ближайшему
 	return value;
@@ -173,7 +191,7 @@ void ITaxiOrder::newPosition(QGeoCoordinate newPosition)
 	if (!started)
 		return;
 	
-	if (gotPosition) {
+    if (gotPosition && !isBonusTime()) {
 		if (outOfCity) {
 			if (_overload) {
 				_mileage_out_of_city_overload += newPosition.distanceTo(currentPosition);

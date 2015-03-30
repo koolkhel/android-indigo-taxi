@@ -35,6 +35,14 @@ public:
 	TaxiRatePeriod orderTaxiRate() { return taxiRate; }
 	void setIsTalon(bool talon) { _is_talon = talon; }
 	bool getIsTalon() { return _is_talon; }
+    void setBonus(bool bonus) { _is_bonus = bonus; }
+    bool getBonus() { return _is_bonus; }
+    void setBonusSeconds(int seconds) { _bonus_seconds = seconds; }
+    int getBonusSeconds() { return _bonus_seconds; }
+    bool isBonusTime() {
+        return _is_bonus && (_total_travel_time_seconds < _bonus_seconds);
+    }
+
 	void setOrderTaxiRate(TaxiRatePeriod _rate) { taxiRate = _rate; } 
 	double totalMileage();
 	
@@ -65,7 +73,14 @@ public:
 	// время округляется до минут
 	int minutesTraincrossStops() {return (seconds_traincross_stops + 30) / 60;}
 	int secondsTraincrossStops() { return seconds_traincross_stops; }
-	int minutesClientStops() {return (seconds_client_stops + 30) / 60;}
+    int minutesClientStops() {
+        // требование бригадира по поводу бесплатных секунд
+        int minutes = (seconds_client_stops + 30) / 60;
+        minutes -= 2; // 2 минуты из насчитанных остановок не идут в расчет
+        if (minutes < 0)
+            minutes = 0;
+        return minutes;
+    }
 	int secondsClientStops() { return seconds_client_stops; }
 	int minutesStops() { return (seconds_stops + 30) / 60; }
 	int secondsStops() { return seconds_stops; }
@@ -95,6 +110,8 @@ signals:
 
 	void movementStartFiltered(bool);
 
+    void bonusRide(bool isBonus);
+
 public slots:
 	void recalcSum();
 	void newPosition(QGeoCoordinate);
@@ -115,6 +132,9 @@ private:
 	TaxiRatePeriod taxiRate;
 
 	bool _is_talon;
+
+    bool _is_bonus;
+    int _bonus_seconds;
 
 	QString _address;
 	

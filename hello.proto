@@ -160,6 +160,10 @@ message TaxiOrder {
   // при поездке по талону мы тариф нужный прицепляем прямо к заказу
   optional bool is_talon = 19 [ default = false ];
   optional TaxiRatePeriod talon_rate = 20;
+  
+  // десятая поездка, 15 минут -- отвяжемся от деталей, будем с сервера присылать только параметры.
+  optional bool free_ride_enabled = 21 [ default = false ];
+  optional int32 free_ride_time = 22 [ default = 0 ];
 }
 
 // MIN=60/TAL_IN=37/TAL_MIN=6.2/BONUS=5/MG=17;

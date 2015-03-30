@@ -446,7 +446,13 @@ void IndigoTaxi::startClientMove()
 
 	float carInRate = iTaxiOrder->orderTaxiRate().car_in() + currentParkingCost;
 	ui.finalCarInLabel->setText(QString("%1").arg(carInRate, 0, 'f', 1));
-	ui.finalCarInTotalLabel->setText(QString("%1").arg(carInRate, 0, 'f', 1));
+    if (iTaxiOrder->getBonus()) {
+        ui.finalCarInCountLabel->setText("0");
+        ui.finalCarInTotalLabel->setText("0");
+    } else {
+        ui.finalCarInCountLabel->setText("1");
+        ui.finalCarInTotalLabel->setText(QString("%1").arg(carInRate, 0, 'f', 1));
+    }
 
 	// целевой регион
 	iTaxiOrder->setRegionId(taxiRegionList.regions().Get(ui.regionList->currentRow()).region_id());
@@ -1329,6 +1335,8 @@ ITaxiOrder *IndigoTaxi::createTaxiOrder(int order_id, QString address)
 	connect(iTaxiOrder, SIGNAL(newTimeMovement(int)), SLOT(newTimeMovement(int)));
 	connect(iTaxiOrder, SIGNAL(newTimeClientStops(int)), SLOT(newTimeClientStops(int)));
 
+    connect(iTaxiOrder, SIGNAL(bonusRide(bool)), SLOT(bonusRideChanged(bool)));
+
 	connect(iTaxiOrder, SIGNAL(movementStartFiltered(bool)), SLOT(movementStartFiltered(bool)));
 
 	connect(this, SIGNAL(orderMovementStart(int)), iTaxiOrder, SLOT(movementStart(int)));
@@ -1406,6 +1414,14 @@ void IndigoTaxi::handleNewOrder(TaxiOrder taxiOrder)
 			iTaxiOrder->setOrderTaxiRate(taxiOrder.talon_rate());
 			iTaxiOrder->setIsTalon(true);
 		}
+
+        if (taxiOrder.free_ride_enabled()) {
+            iTaxiOrder->setBonus(true);
+            iTaxiOrder->setBonusSeconds(taxiOrder.free_ride_time());
+        } else {
+            iTaxiOrder->setBonus(false);
+            iTaxiOrder->setBonusSeconds(0);
+        }
 
 		voiceLady->alarm();
 
@@ -1952,4 +1968,12 @@ void IndigoTaxi::switchColorsClicked()
 			break;
 	}
 	applyColorTheme();
+}
+
+void IndigoTaxi::bonusRideChanged(bool status) {
+    if (status) {
+        ui.bonusRideLabel->setText("БОНУСНАЯ ПОЕЗДКА");
+    } else {
+        ui.bonusRideLabel->setText("");
+    }
 }

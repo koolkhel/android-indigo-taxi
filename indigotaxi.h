@@ -195,6 +195,8 @@ public slots:
 
 	void driverUpdateTimerTimeout();
 
+    void bonusRideChanged(bool);
+
 private slots:
 	void updateDownloadError(QString);
 
