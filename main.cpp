@@ -1,8 +1,8 @@
 #include "indigotaxi.h"
 #include <QApplication>
 
-#include <QtNetwork/QTcpSocket>
 #include <QDesktopWidget>
+#include <QScreen>
 
 #include <QtCore>
 #include <QtGui>
@@ -119,15 +119,23 @@ Debug: "WindowsMobile"
 	
 		IndigoTaxi w;
 		mainWindow = &w;
-		
-#ifdef UNDER_CE
-		
-		w.show();
-		w.showFullScreen();
-#else
 
-        w.showNormal();
-#endif
+        QScreen *screen = QApplication::screens().at(0);
+
+        int availableHeight = screen->size().height();
+
+        int availableWidth = screen->size().width();
+
+        // DEXP
+        if (availableWidth == 854) {
+            w.showMaximized();
+        // SAMSUNG
+        } else if (availableWidth == 800) {
+            // FIXME everything
+            int statusBarHeight = 38;
+            w.setGeometry(0, statusBarHeight, availableWidth, availableHeight - statusBarHeight);
+            w.showNormal();
+        }
 
 		qDebug() << "screen height:" << QApplication::desktop()->heightMM() << "width:" << QApplication::desktop()->widthMM();
 		qDebug() << "physical screen dpi height:" << w.physicalDpiY() << "width:" << w.physicalDpiX();

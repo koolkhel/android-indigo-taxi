@@ -2,6 +2,7 @@ package ru.indigosystem.taxi.android;
 
 import android.app.ApplicationErrorReport;
 import android.media.MediaPlayer;
+import android.media.AudioManager;
 import java.io.*;
 import android.util.Log;
 
@@ -19,11 +20,20 @@ public class AudioClient //Вот именно об этом активите я
         if (mp == null) {
             Log.e(TAG, "new mediaplayer");
             mp = new MediaPlayer();
+            mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                @Override
+                                public void onPrepared(MediaPlayer mp1) {
+                                    if (mp1 == mp) {
+                                        mp.start();
+                                    }
+                                }
+                            });
             mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
                 @Override
                 public void onCompletion(MediaPlayer mediaplayer) {
                   Log.e(TAG, "playback complete");
                   mp.stop();
+                  mp.reset();
                   mp.release();
                   mp = null;
                   synchronized (lock) {
@@ -35,9 +45,9 @@ public class AudioClient //Вот именно об этом активите я
 
         try {
             Log.e(TAG, "arming playing sound " + input);
+            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mp.setDataSource(input);            
-            mp.prepare();
-            mp.start();
+            mp.prepareAsync();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "exception while playing sound");

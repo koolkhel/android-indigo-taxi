@@ -26,7 +26,7 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 	newDirection(false), online(false), downloader(NULL), changeRegion(false), asked_region_id(0),
 	_taxiRateUpdated(false), _taxiRateReceived(false), _updatePerformed(false), _intercity(0),
 	_stop_sound_played(false), _start_sound_played(false), _driverOrder(0), colorTheme(INDIGO_DARK_THEME),
-	_changeRegionStopEvent(hello_TaxiEvent_NOTHING), _dpi(120), _width(800), _height(480), _orderOfferGuard(false)
+    _changeRegionStopEvent(hello_TaxiEvent_NOTHING), _dpi(120), _width(800), _height(480), _orderOfferGuard(false)
 {
 	ui.setupUi(this);
 #ifdef UNDER_CE
@@ -168,7 +168,7 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 
 	ui.stackedWidget->setCurrentWidget(ui.settingsPage4);
 	ui.settingsTabWidget->setCurrentWidget(ui.driverCabinetSettingsTab2);
-	ui.driverCabinetSettingsStackWidget->setCurrentWidget(ui.driverCabinetPage1);
+	ui.driverCabinetSettingsStackWidget->setCurrentWidget(ui.driverCabinetPage1);    
 }
 
 void IndigoTaxi::resizeEvent(QResizeEvent *event)
@@ -177,7 +177,7 @@ void IndigoTaxi::resizeEvent(QResizeEvent *event)
     _width = screen->size().width();
     _height = screen->size().height();
 
-    int tab_width = _width / ui.settingsTabWidget->count() - 3;
+    int tab_width = _width / ui.settingsTabWidget->count() - 15;
     int tab_height = (int) _height * 0.15;
 
     qDebug() << "resizing to width " << tab_width << " height " << tab_height;
