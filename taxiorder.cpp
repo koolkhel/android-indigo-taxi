@@ -191,7 +191,8 @@ void ITaxiOrder::newPosition(QGeoCoordinate newPosition)
 	if (!started)
 		return;
 	
-    if (gotPosition && !isBonusTime()) {
+    // если сейчас пробки, километраж не считается
+    if (gotPosition && !isBonusTime() && !(_clientStop && !movementStarted)) {
 		if (outOfCity) {
 			if (_overload) {
 				_mileage_out_of_city_overload += newPosition.distanceTo(currentPosition);
