@@ -17,7 +17,7 @@
 #define DEBUG
 
 /* main version string! */
-static const char *version = "0.1.029";
+static const char *version = "0.1.033";
 int const IndigoTaxi::EXIT_CODE_REBOOT = -123456789;
 
 IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
@@ -1588,14 +1588,26 @@ void IndigoTaxi::overloadButtonClicked(bool on)
 {
 	if (on) {
 		voiceLady->sayPhrase("OVERLOAD");
+
+        hello var;
+
+        var.set_event(hello_TaxiEvent_TEXT_MESSAGE);
+        var.set_text_string(QString("Я включил режим Перегруз").toUtf8());
+        backend->send_message(var);
 	} else {
 		voiceLady->sayPhrase("OVERLOADOFF");
+
+        hello var;
+
+        var.set_event(hello_TaxiEvent_TEXT_MESSAGE);
+        var.set_text_string(QString("Я выключил режим Перегруз").toUtf8());
+        backend->send_message(var);
 	}
 
 	if (iTaxiOrder == NULL)
 		return;
 
-	iTaxiOrder->setOverload(on);
+    //iTaxiOrder->setOverload(on);
 	// fixme some messages, maybe
 }
 

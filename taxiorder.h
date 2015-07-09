@@ -40,7 +40,10 @@ public:
     void setBonusSeconds(int seconds) { _bonus_seconds = seconds; }
     int getBonusSeconds() { return _bonus_seconds; }
     bool isBonusTime() {
-        return _is_bonus && (_total_travel_time_seconds < _bonus_seconds);
+        // если за город выехали хотя бы один раз, больше бонуса не будет
+        if (outOfCity)
+            _bonus_seconds = 0;
+        return _is_bonus && (_total_travel_time_seconds < _bonus_seconds) && !outOfCity;
     }
 
 	void setOrderTaxiRate(TaxiRatePeriod _rate) { taxiRate = _rate; } 
