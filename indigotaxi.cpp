@@ -17,7 +17,7 @@
 #define DEBUG
 
 /* main version string! */
-static const char *version = "0.1.033";
+static const char *version = "0.1.034";
 int const IndigoTaxi::EXIT_CODE_REBOOT = -123456789;
 
 IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
@@ -1564,8 +1564,16 @@ void IndigoTaxi::movementStart(int start)
 
 			ui.trainCrossButton->setChecked(false);
 			enableWidget(ui.trainCrossButton, true);
-		}
-	} else { // if (movementStarted)
+        }
+
+        // если сейчас окно расчета, а мы поехали
+        if (ui.stackedWidget->currentWidget() == ui.paytimePage3) {
+            // переходим на страницу заказа
+            ui.stackedWidget->setCurrentWidget(ui.orderPage2);
+            // запускаем заново счет денег
+            iTaxiOrder->startOrder();
+        }
+    } else { // if (movementStarted)
 		iTaxiOrder->setClientStop(true);
 	}
 }
