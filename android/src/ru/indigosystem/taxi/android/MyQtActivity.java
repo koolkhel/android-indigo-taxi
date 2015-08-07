@@ -32,23 +32,27 @@
     THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
     THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+ */
 
 package ru.indigosystem.taxi.android;
 import org.qtproject.qt5.android.bindings.*;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.provider.Settings;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import android.app.ApplicationErrorReport;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import java.io.*;
 import android.util.Log;
@@ -56,107 +60,104 @@ import java.nio.charset.*;
 
 public class MyQtActivity extends QtActivity
 {
-    public static int playAudio(String input) {
-        MediaPlayer mp = new MediaPlayer();
-           Log.i("tag", input);
-           try {
-               mp.setDataSource(input);
-           } catch (IllegalArgumentException e) {
-               Log.i("setDataSource", "IllegalArgumentException");
-               e.printStackTrace();
-           } catch (IllegalStateException e) {
-               Log.i("setDataSource", "IllegalStateException");
-               e.printStackTrace();
-           } catch (IOException e) {
-               Log.i("setDataSource", "IOException");
-               e.printStackTrace();
-           }
-           try {
-               mp.prepare();
-           } catch (IllegalStateException e) {
-               Log.i("prepare", "IllegalStateException");
-               e.printStackTrace();
-           } catch (IOException e) {
-               Log.i("prepare", "IOException");
-               e.printStackTrace();
-           }
-           mp.start();
+	public static MyQtActivity s_activity = null;
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+			AudioManager am = 
+					(AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        return 0;
+			am.setStreamVolume(
+					AudioManager.STREAM_MUSIC,
+					am.getStreamMaxVolume(AudioManager.STREAM_MUSIC),
+					0);			
+			
+			return true;
+		}
+        return super.onKeyDown(keyCode, event);
     }
 
-    public void displayPromptForEnablingGPS()
-       {
-           final AlertDialog.Builder builder =
-               new AlertDialog.Builder(this);
-           final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-           final String message = "Для работы Клиента Такси необходимо включить GPS. Нажмите OK для перехода к экрану настроек. Без GPS работа запрещена";
+	public void displayPromptForEnablingGPS()
+	{
+		final AlertDialog.Builder builder =
+				new AlertDialog.Builder(this);
+		final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
+		final String message = "Для работы Клиента Такси необходимо включить GPS. Нажмите OK для перехода к экрану настроек. Без GPS работа запрещена";
 
-           final Activity activity = this;
+		final Activity activity = this;
 
-           builder.setMessage(message)
-               .setPositiveButton("OK",
-                   new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface d, int id) {
-                           activity.startActivity(new Intent(action));
-                           d.dismiss();
-                       }
-               })
-               .setNegativeButton("Cancel",
-                   new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface d, int id) {
-                           d.cancel();
-                       }
-               });
-           builder.create().show();
-       }
+		builder.setMessage(message)
+		.setPositiveButton("OK",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface d, int id) {
+				activity.startActivity(new Intent(action));
+				d.dismiss();
+			}
+		})
+		.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface d, int id) {
+				d.cancel();
+			}
+		});
+		builder.create().show();
+	}
 
-       public void displayPromptForEnabling3G()
-          {
-              final AlertDialog.Builder builder =
-                  new AlertDialog.Builder(this);
-              final String action = Settings.ACTION_WIRELESS_SETTINGS;
-              final String message = "Для работы Клиента Такси необходимо включить Интернет. Нажмите OK для перехода к экрану настроек. Без Интернета работа запрещена";
+	public void displayPromptForEnabling3G()
+	{
+		final AlertDialog.Builder builder =
+				new AlertDialog.Builder(this);
+		final String action = Settings.ACTION_WIRELESS_SETTINGS;
+		final String message = "Для работы Клиента Такси необходимо включить Интернет. Нажмите OK для перехода к экрану настроек. Без Интернета работа запрещена";
 
-              final Activity activity = this;
+		final Activity activity = this;
 
-              builder.setMessage(message)
-                  .setPositiveButton("OK",
-                      new DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface d, int id) {
-                              activity.startActivity(new Intent(action));
-                              d.dismiss();
-                          }
-                  })
-                  .setNegativeButton("Cancel",
-                      new DialogInterface.OnClickListener() {
-                          public void onClick(DialogInterface d, int id) {
-                              d.cancel();
-                          }
-                  });
-              builder.create().show();
-          }
+		builder.setMessage(message)
+		.setPositiveButton("OK",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface d, int id) {
+				activity.startActivity(new Intent(action));
+				d.dismiss();
+			}
+		})
+		.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface d, int id) {
+				d.cancel();
+			}
+		});
+		builder.create().show();
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		s_activity = this;
 
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+		final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
-        if (!manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-            displayPromptForEnablingGPS();
-        }
+		if (!manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+			displayPromptForEnablingGPS();
+		}
 
-        ConnectivityManager conMan = ((ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE));
-        boolean isWifiEnabled = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isAvailable();
-        boolean is3GEnabled = !(conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED);
-        is3GEnabled |= !"dataDisabled".equals(conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getReason());
+		ConnectivityManager conMan = ((ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE));
+		boolean isWifiEnabled = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isAvailable();
+		boolean is3GEnabled = !(conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.DISCONNECTED);
+		is3GEnabled |= !"dataDisabled".equals(conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getReason());
 
-        if (!isWifiEnabled && !is3GEnabled) {
-            displayPromptForEnabling3G();
-        }
+		if (!isWifiEnabled && !is3GEnabled) {
+			displayPromptForEnabling3G();
+		}
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
-
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);				
+	}
+	
+	
+	
+	@Override
+	protected void onDestroy() {
+		s_activity = null;
+		super.onDestroy();
+	}
 }

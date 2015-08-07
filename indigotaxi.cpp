@@ -5,6 +5,8 @@
 
 #ifndef UNDER_ANDROID
 #include "windows.h"
+#else
+#include <QAndroidJniObject>
 #endif
 #ifdef UNDER_CE
 // для выключенияf
@@ -19,6 +21,7 @@
 /* main version string! */
 static const char *version = "0.1.034";
 int const IndigoTaxi::EXIT_CODE_REBOOT = -123456789;
+IndigoTaxi *IndigoTaxi::_instance = NULL;
 
 IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
 	: QMainWindow(parent, flags), iTaxiOrder(NULL), lastTaxiOrder(NULL), 
@@ -29,6 +32,8 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
     _changeRegionStopEvent(hello_TaxiEvent_NOTHING), _dpi(120), _width(800), _height(480), _orderOfferGuard(false)
 {
 	ui.setupUi(this);
+    _instance = this;
+
 #ifdef UNDER_CE
     QWindowFlags flags = 0;
     flags = Qt::Window | Qt::FramelessWindowHint;
@@ -1997,3 +2002,48 @@ void IndigoTaxi::bonusRideChanged(bool status) {
         ui.bonusRideLabel->setText("");
     }
 }
+
+#ifdef UNDER_ANDROID
+static void onHeadsetAttach(JNIEnv *, jobject) {
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "headsetAttached",
+                              Qt::BlockingQueuedConnection, Q_ARG(int, 1));
+}
+
+static void onHeadsetDetach(JNIEnv *, jobject)
+{
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "headsetAttached",
+                              Qt::BlockingQueuedConnection, Q_ARG(int, 0));
+}
+
+void IndigoTaxi::headsetAttached(int state)
+{
+    qDebug() << "headset state: " << state;
+}
+
+//create a vector with all our JNINativeMethod(s)
+static JNINativeMethod methods[] = {
+    {"onHeadsetAttach", "()V", (void *)onHeadsetAttach},
+    {"onHeadsetDetach", "()V", (void *)onHeadsetDetach},
+};
+
+// this method is called automatically by Java after the .so file is loaded
+JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* /*reserved*/)
+{
+    JNIEnv* env; // get the JNIEnv pointer.
+    if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK)
+        return JNI_ERR;
+
+    // search for Java class which declares the native methods
+    jclass javaClass = env->FindClass("ru/indigosystem/taxi/android/NativeFunctions");
+    if (!javaClass)
+        return JNI_ERR;
+
+    // register our native methods
+    if (env->RegisterNatives(javaClass, methods,
+                             sizeof(methods) / sizeof(methods[0])) < 0) {
+        return JNI_ERR;
+    }
+
+    return JNI_VERSION_1_6;
+}
+#endif

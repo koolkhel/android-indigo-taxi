@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <manifest package="ru.indigosystem.taxi.android" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.1" android:versionCode="1" android:installLocation="auto">
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="AndroidIndigoTaxi" android:icon="@drawable/icon">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="ru.indigosystem.taxi.android.MyQtActivity" android:label="@string/app_name" android:keepScreenOn="true" android:alwaysRetainTaskState="true" android:screenOrientation="landscape" android:launchMode="singleInstance">
             <intent-filter>
@@ -48,6 +49,7 @@
 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.REBOOT"/>
+    <uses-permission android:name="android.permission.PREVENT_POWER_KEY"/>
     <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

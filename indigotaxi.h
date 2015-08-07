@@ -37,6 +37,9 @@ class IndigoTaxi : public QMainWindow
 	Q_OBJECT
 
 public:
+
+    static IndigoTaxi &instance() { return *_instance; }
+
     IndigoTaxi(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~IndigoTaxi();
 	static int const EXIT_CODE_REBOOT;
@@ -61,6 +64,8 @@ signals:
 	
 	
 public slots:
+    void headsetAttached(int state);
+
 	void backlight(bool onOff);
 	void changeBackLightClicked();
 	void showInfoDialog(QString message);
@@ -316,6 +321,8 @@ private:
 	enum IndigoColorTheme colorTheme;
 
 	void applyColorTheme();
+
+    static IndigoTaxi *_instance;
 };
 
 #endif // INDIGOTAXI_H

@@ -9,6 +9,10 @@
 #include <QtGlobal>
 #include <QDebug>
 
+#ifdef UNDER_ANDROID
+#include <QAndroidJniObject>
+#endif
+
 #include "hello.pb.h"
 
 // #include "InputDevice/inputdevice.h"
@@ -140,6 +144,11 @@ Debug: "WindowsMobile"
 		qDebug() << "screen height:" << QApplication::desktop()->heightMM() << "width:" << QApplication::desktop()->widthMM();
 		qDebug() << "physical screen dpi height:" << w.physicalDpiY() << "width:" << w.physicalDpiX();
 		//qDebug() << "logical screen dpi height:" << w.logicalDpiY() << "width:" << w.logicalDpiX();
+
+#ifdef UNDER_ANDROID
+        // пока для событий подключения наушников
+        QAndroidJniObject::callStaticMethod<void>("ru/indigosystem/taxi/android/NativeFunctions", "registerBroadcastReceiver", "()V");
+#endif
 
 		retcode = a.exec();	
 

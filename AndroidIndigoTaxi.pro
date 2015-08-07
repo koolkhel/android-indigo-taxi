@@ -84,3 +84,8 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
         $$PWD/android/libs/armeabi-v7a/libprotobuf-2.5.0.so \
         $$PWD/android/libs/armeabi-v7a/libgnustl_shared.so
 }
+
+DISTFILES += \
+    android/src/ru/indigosystem/taxi/android/HeadsetReceiverRunnable.java \
+    android/src/ru/indigosystem/taxi/android/HeadsetReceiver.java \
+    android/src/ru/indigosystem/taxi/android/NativeFunctions.java
