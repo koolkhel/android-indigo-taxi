@@ -144,6 +144,8 @@ IndigoTaxi::IndigoTaxi(QWidget *parent, Qt::WindowFlags flags)
     _dpi = (int) sqrt(_width*_width + _height*_height) / 4; // average screen size
     qDebug() << "calculated DPI:" << _dpi;
     setDPI(_dpi);
+
+    batteryLowNotified = false;
 #endif
 
     resizeEvent(NULL);
@@ -1597,24 +1599,36 @@ void IndigoTaxi::trainCrossButtonClicked()
 	//}
 }
 
+void IndigoTaxi::sendTextMessage(QString message)
+{
+    hello var;
+
+    var.set_event(hello_TaxiEvent_TEXT_MESSAGE);
+    var.set_text_string(message.toUtf8());
+    backend->send_message(var);
+}
+
+void IndigoTaxi::sendSecurityMessage(QString message)
+{
+    hello var;
+
+    var.set_event(hello_TaxiEvent_SECURITY);
+
+    Security *security = var.mutable_security();
+    security->set_message(message.toUtf8());
+    backend->send_message(var);
+}
+
 void IndigoTaxi::overloadButtonClicked(bool on)
 {
 	if (on) {
 		voiceLady->sayPhrase("OVERLOAD");
 
-        hello var;
-
-        var.set_event(hello_TaxiEvent_TEXT_MESSAGE);
-        var.set_text_string(QString("Я включил режим Перегруз").toUtf8());
-        backend->send_message(var);
+        sendSecurityMessage("Я включил режим Перегруз");
 	} else {
 		voiceLady->sayPhrase("OVERLOADOFF");
 
-        hello var;
-
-        var.set_event(hello_TaxiEvent_TEXT_MESSAGE);
-        var.set_text_string(QString("Я выключил режим Перегруз").toUtf8());
-        backend->send_message(var);
+        sendSecurityMessage("Я выключил режим Перегруз");
 	}
 
 	if (iTaxiOrder == NULL)
@@ -2004,26 +2018,146 @@ void IndigoTaxi::bonusRideChanged(bool status) {
 }
 
 #ifdef UNDER_ANDROID
+static void onBatteryLow(JNIEnv *, jobject) {
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onBatteryLow",
+                              Qt::QueuedConnection);
+}
+
+void IndigoTaxi::onBatteryLow() {
+    qDebug() << "battery LOW!";
+    voiceLady->alarm();
+    if (!batteryLowNotified) {
+        sendSecurityMessage("ВНИМАНИЕ: БАТАРЕЯ НАВИГАТОРА ПОЧТИ РАЗРЯЖЕНА");
+        infoDialog->info("НАВИГАТОР РАЗРЯЖАЕТСЯ. ПОДКЛЮЧИТЕ ЗАРЯДНОЕ УСТРОЙСТВО");
+        batteryLowNotified = true;
+    }
+}
+
+static void onBatteryOkay(JNIEnv *, jobject) {
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onBatteryOkay",
+                              Qt::QueuedConnection);
+}
+
+void IndigoTaxi::onBatteryOkay() {
+    qDebug() << "battery okay";
+    batteryLowNotified = false;
+}
+
+static void onBatteryChanged(JNIEnv *, jobject, jint status, jdouble percent) {
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onBatteryChanged",
+                              Qt::QueuedConnection, Q_ARG(int, status), Q_ARG(double, percent));
+}
+
+void IndigoTaxi::onBatteryChanged(int status, double percent) {
+    qDebug() << "battery changed: " << status << " " << percent << "%";
+}
+
+static void onShutdown(JNIEnv *, jobject) {
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onShutdown",
+                              Qt::QueuedConnection);
+}
+
+void IndigoTaxi::onShutdown() {
+    qDebug() << "shutdown called";
+    sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ВЫКЛЮЧАЕТ НАВИГАТОР");
+}
+
+static void onReboot(JNIEnv *, jobject) {
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onReboot",
+                              Qt::QueuedConnection);
+}
+
+void IndigoTaxi::onReboot() {
+    qDebug() << "reboot called";
+    sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ПЕРЕЗАГРУЖАЕТ НАВИГАТОР");
+}
+
+static void onPowerChange(JNIEnv *, jobject, jint status) {
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onPowerChange",
+                              Qt::QueuedConnection, Q_ARG(int, status));
+}
+
+void IndigoTaxi::onPowerChange(int status) {
+    qDebug() << "power change: " << status;
+    if (status == 0) {
+        voiceLady->alarm();
+        infoDialog->info("ОБНАРУЖЕНО ОТСУТСТВИЕ ЗАРЯДНОГО УСТРОЙСТВА. ПОДКЛЮЧИТЕ НАВИАТОР К ИСТОЧНИКУ ПИТАНИЯ");
+    }
+}
+
+static void onAirplaneModeChanged(JNIEnv *, jobject, jint status) {
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onAirplaneModeChanged",
+                              Qt::QueuedConnection, Q_ARG(int, status));
+}
+
+void IndigoTaxi::onAirplaneModeChanged(int status) {
+    qDebug() << "airplane mode: " << status;
+    if (status) {
+        sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ВЫКЛЮЧИЛ СВЯЗЬ");
+    }
+}
+
 static void onHeadsetAttach(JNIEnv *, jobject) {
     QMetaObject::invokeMethod(&IndigoTaxi::instance(), "headsetAttached",
-                              Qt::BlockingQueuedConnection, Q_ARG(int, 1));
+                              Qt::QueuedConnection, Q_ARG(int, 1));
 }
 
 static void onHeadsetDetach(JNIEnv *, jobject)
 {
     QMetaObject::invokeMethod(&IndigoTaxi::instance(), "headsetAttached",
-                              Qt::BlockingQueuedConnection, Q_ARG(int, 0));
+                              Qt::QueuedConnection, Q_ARG(int, 0));
 }
 
 void IndigoTaxi::headsetAttached(int state)
 {
     qDebug() << "headset state: " << state;
+    switch (state) {
+    case 0:
+        sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ГАРНИТУРУ ОТКЛЮЧИЛ");
+        break;
+    case 1:
+        sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ГАРНИТУРУ ПОДКЛЮЧИЛ");
+        break;
+
+    }
+}
+
+static void onScreenOnOff(JNIEnv *, jobject, int on)
+{
+    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onScreenOnOff",
+                              Qt::QueuedConnection, Q_ARG(int, on));
+}
+
+void IndigoTaxi::onScreenOnOff(int on)
+{
+    qDebug() << "screen on off: " << on;
+    switch (on) {
+    case 1:
+        if (iTaxiOrder != NULL) {
+            voiceLady->alarm();
+            sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ВЫКЛЮЧИЛ ЭКРАН ТАКСОМЕТРА ПРИ АКТИВНОМ ЗАКАЗЕ");
+        }
+        break;
+    case 0:
+        if (iTaxiOrder != NULL) {
+            sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ВКЛЮЧИЛ ЭКРАН ТАКСОМЕТРА ПРИ АКТИВНОМ ЗАКАЗЕ");
+        }
+        break;
+    }
 }
 
 //create a vector with all our JNINativeMethod(s)
 static JNINativeMethod methods[] = {
     {"onHeadsetAttach", "()V", (void *)onHeadsetAttach},
     {"onHeadsetDetach", "()V", (void *)onHeadsetDetach},
+    {"onBatteryLow", "()V", (void *)onBatteryLow},
+    {"onBatteryOkay", "()V", (void *)onBatteryOkay},
+    {"onBatteryChanged", "(ID)V", (void *)onBatteryChanged},
+    {"onShutdown", "()V", (void *)onShutdown},
+    {"onReboot", "()V", (void *)onReboot},
+    {"onPowerChange", "(I)V", (void *)onPowerChange},
+    {"onAirplaneModeChanged", "(I)V", (void *)onAirplaneModeChanged},
+    {"onScreenOnOff", "(I)V", (void *) onScreenOnOff},
 };
 
 // this method is called automatically by Java after the .so file is loaded

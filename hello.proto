@@ -54,7 +54,9 @@ message hello
     ORDER_OFFER = 38; // предлагаю заказ на такой-то адрес (от диспетчера)
     MAY_GO_DINNER = 39; // с девайса -- можно ли на обед?
     YES_GO_DINNER = 40; // да, иди
-    NO_GO_DINNER = 41; // нет, оставайся  
+    NO_GO_DINNER = 41; // нет, оставайся
+    DISCONNECT = 42; // девайс отвалился с линии, сообщение между коннектором и серваком только
+    SECURITY = 43; // сообщение безопасности  
 	}
 
 	optional TaxiEvent event = 3     [default = NOTHING];
@@ -72,6 +74,11 @@ message hello
   optional TaxiMessageTemplates taxiMessageTemplates = 13;
   optional TaxiCount taxiCount = 14;
   optional DriverInfo driverInfo = 15;
+  optional Security security = 16;
+}
+
+message Security {
+  optional string message = 1 [ default = "" ];
 }
 
 message DriverInfo {

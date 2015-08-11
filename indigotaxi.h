@@ -204,8 +204,20 @@ public slots:
 
 private slots:
 	void updateDownloadError(QString);
-
+#ifdef UNDER_ANDROID
+    void onBatteryLow();
+    void onBatteryOkay();
+    void onBatteryChanged(int status, double percent);
+    void onShutdown();
+    void onReboot();
+    void onPowerChange(int status);
+    void onAirplaneModeChanged(int status);
+    void onScreenOnOff(int on);
+#endif
 private:
+    void sendTextMessage(QString message);
+    void sendSecurityMessage(QString message);
+
 	TaxiRegionList taxiRegionList;
 	TaxiRateAll taxiRates;
 	TaxiMessageTemplates taxiMessageTemplates;
@@ -323,6 +335,10 @@ private:
 	void applyColorTheme();
 
     static IndigoTaxi *_instance;
+
+#ifdef UNDER_ANDROID
+    bool batteryLowNotified;
+#endif
 };
 
 #endif // INDIGOTAXI_H

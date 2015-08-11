@@ -117,6 +117,8 @@ void VoiceLady::speakMoney(int amount)
 }
 void VoiceLady::alarm() {
     emit playSound(":/Sound/Android/ringin");
+    emit playSound(":/Sound/Android/ringin");
+    emit playSound(":/Sound/Android/ringin");
 }
 
 void VoiceLady::click()
