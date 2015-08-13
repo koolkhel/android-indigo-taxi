@@ -57,6 +57,9 @@ message hello
     NO_GO_DINNER = 41; // нет, оставайся
     DISCONNECT = 42; // девайс отвалился с линии, сообщение между коннектором и серваком только
     SECURITY = 43; // сообщение безопасности  
+    MAY_GO = 44; // могу ли отлучиться?
+    YES_GO = 45; // да
+    NO_GO = 46;  // нет
 	}
 
 	optional TaxiEvent event = 3     [default = NOTHING];

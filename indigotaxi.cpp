@@ -19,7 +19,7 @@
 #define DEBUG
 
 /* main version string! */
-static const char *version = "0.1.034";
+static const char *version = "0.1.035";
 int const IndigoTaxi::EXIT_CODE_REBOOT = -123456789;
 IndigoTaxi *IndigoTaxi::_instance = NULL;
 
@@ -327,7 +327,7 @@ void IndigoTaxi::setCurrentScreenFromSettings()
 		ui.settingsTabWidget->setCurrentWidget(ui.driverCabinetSettingsTab2);
 		ui.stackedWidget->setCurrentWidget(ui.settingsPage4);
 		enableDutyUI(true);
-		ui.driverCabinetSettingsStackWidget->setCurrentWidget(ui.driverCabinetPageAway4);
+        ui.driverCabinetSettingsStackWidget->setCurrentWidget(ui.driverCabinetPageAway4);
 	} else if (status == "REPAIR") {
 		ui.settingsTabWidget->setCurrentWidget(ui.driverCabinetSettingsTab2);
 		ui.stackedWidget->setCurrentWidget(ui.settingsPage4);
@@ -501,6 +501,11 @@ void IndigoTaxi::protobuf_message(hello message)
 		dinnerHandleAnswer(message);
 		return;
 	}
+
+    if (message.event() == hello_TaxiEvent_YES_GO || message.event() == hello_TaxiEvent_NO_GO) {
+        mayGoHandleAnswer(message);
+        return;
+    }
 	
 	// старый способ доставки адреса
 	if (message.event() == hello_TaxiEvent_ABORT_ORDER) {
@@ -1123,6 +1128,24 @@ void IndigoTaxi::dinnerHandleAnswer(hello var) {
 	}
 }
 
+void IndigoTaxi::mayGoHandleAnswer(hello var)
+{
+    if (var.event() == hello_TaxiEvent_YES_GO) {
+        voiceLady->sayPhrase("MESSAGERECEIVED");
+        if (confirmDialog->ask("Диспетчер отпускает Вас отлучиться. Подтвердите свой уход")) {
+            backend->sendEvent(hello_TaxiEvent_MOVE_OUT);
+            setSettingsStatus("AWAY");
+            ui.stackedWidget->setCurrentWidget(ui.settingsPage4);
+            ui.settingsTabWidget->setCurrentWidget(ui.driverCabinetSettingsTab2);
+            ui.driverCabinetSettingsStackWidget->setCurrentWidget(ui.driverCabinetPageAway4);
+        }
+
+    } else if (var.event() == hello_TaxiEvent_NO_GO) {
+        voiceLady->sayPhrase("MESSAGERECEIVED");
+        showInfoDialog("Диспетчер оставляет вас на линии");
+    }
+}
+
 void IndigoTaxi::dinnerStopClicked()
 {
 	backend->sendEvent(hello_TaxiEvent_BACK_DINNER);
@@ -1190,9 +1213,8 @@ void IndigoTaxi::taxiOrgChanged(int taxiOrgID)
 
 void IndigoTaxi::awayButtonClicked()
 {
-	backend->sendEvent(hello_TaxiEvent_MOVE_OUT);
-	setSettingsStatus("AWAY");
-	ui.driverCabinetSettingsStackWidget->setCurrentWidget(ui.driverCabinetPageAway4);
+    backend->sendEvent(hello_TaxiEvent_MAY_GO);
+    showInfoDialog("Диспетчеру отправлен вопрос о вашей просьбе отлучиться");
 }
 
 void IndigoTaxi::awayEndButtonClicked()
@@ -1832,7 +1854,7 @@ void IndigoTaxi::privateClientButtonClicked()
 
 void IndigoTaxi::infoClicked()
 {
-	infoDialog->info("ПРОГРАММА IndigoTaxi, версия " + QString(version) + ", 2014 год. Разработчик: ООО \"Системы Индиго\"");
+    infoDialog->info("ПРОГРАММА IndigoTaxi, версия " + QString(version) + ", 2014, 2015. Разработчик: ООО \"Системы Индиго\"");
 }
 
 void IndigoTaxi::updatesDownloadTipVersionString()
@@ -2122,10 +2144,14 @@ void IndigoTaxi::headsetAttached(int state)
     }
 }
 
-static void onScreenOnOff(JNIEnv *, jobject, int on)
+static void onScreenOnOff(JNIEnv *, jobject, jint on)
 {
-    QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onScreenOnOff",
-                              Qt::QueuedConnection, Q_ARG(int, on));
+    // backend все нормально отправит, там мютекс есть
+    bool result = QMetaObject::invokeMethod(&IndigoTaxi::instance(), "onScreenOnOff",
+                              Qt::DirectConnection, Q_ARG(int, on));
+    if (!result) {
+        qDebug() << "Qt method could not be called";
+    }
 }
 
 void IndigoTaxi::onScreenOnOff(int on)
@@ -2134,13 +2160,13 @@ void IndigoTaxi::onScreenOnOff(int on)
     switch (on) {
     case 1:
         if (iTaxiOrder != NULL) {
-            voiceLady->alarm();
-            sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ВЫКЛЮЧИЛ ЭКРАН ТАКСОМЕТРА ПРИ АКТИВНОМ ЗАКАЗЕ");
+            sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ВКЛЮЧИЛ ЭКРАН ТАКСОМЕТРА ПРИ АКТИВНОМ ЗАКАЗЕ");
         }
         break;
     case 0:
         if (iTaxiOrder != NULL) {
-            sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ВКЛЮЧИЛ ЭКРАН ТАКСОМЕТРА ПРИ АКТИВНОМ ЗАКАЗЕ");
+            voiceLady->alarm();
+            sendSecurityMessage("ВНИМАНИЕ: ВОДИТЕЛЬ ВЫКЛЮЧИЛ ЭКРАН ТАКСОМЕТРА ПРИ АКТИВНОМ ЗАКАЗЕ");
         }
         break;
     }
