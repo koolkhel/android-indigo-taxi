@@ -336,7 +336,7 @@ void Backend::send_message(hello &var)
 	if (socket->state() == QTcpSocket::ConnectedState) {
 		socketMutex.lock();
 		if (socket->write(buffer, output.ByteCount()) == -1) {
-			socket->disconnect();
+            socket->disconnectFromHost();
 		}
 		//qDebug() << "send unsafe: " << output.ByteCount() << "bytes";
 		socket->flush();
