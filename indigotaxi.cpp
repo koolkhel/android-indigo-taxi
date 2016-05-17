@@ -19,7 +19,7 @@
 #define DEBUG
 
 /* main version string! */
-static const char *version = "0.1.035";
+static const char *version = "0.1.036";
 int const IndigoTaxi::EXIT_CODE_REBOOT = -123456789;
 IndigoTaxi *IndigoTaxi::_instance = NULL;
 
